@@ -4,9 +4,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="stylesheet" href="css/app.css" />
+
         <title>VideoTube</title>
     </head>
     <body>
+        <!-- Entry point for the react app -->
+        <div id="app"></div>
 
+        <!-- Import React -->
+        <script src="js/app.js"></script>
     </body>
 </html>
