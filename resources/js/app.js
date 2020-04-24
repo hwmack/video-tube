@@ -4,12 +4,15 @@
  * building robust, powerful web applications using React + Laravel.
  */
 
-require('./bootstrap');
+import React from 'react'
+import * as ReactDOM from "react-dom"
+import { store } from './frontend/models/Store'
+import App from './frontend/views/App'
 
-/**
- * Next, we will create a fresh React component instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+require('./bootstrap')
 
-require('./components/App');
+window['store'] = store;
+
+ReactDOM.render(
+    <App />,
+    document.getElementById('app'))

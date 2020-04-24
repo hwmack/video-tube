@@ -14,6 +14,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
+
+/**
+ *
+ */
+Route::get('/login', function (Request $request) {
+
+    // Try to send an email
+
+    Mail::to('hayden@example.com')->send(new VerifyEmail());
+
+    return 'some text';
+});
+
+Route::middleware('auth:api')->post('/logout', function (Request $request) {
+    // Destroys the logged in users authentication
+});
+
+/**
+ *
+ */
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
