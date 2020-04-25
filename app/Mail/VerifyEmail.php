@@ -28,6 +28,8 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
+        // Refactor this into the actual email
+
         $address = 'hayden.mack.7@gmail.com';
         $subject = 'This is a demo!';
         $name = 'HMACK';

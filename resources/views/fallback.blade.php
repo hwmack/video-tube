@@ -9,6 +9,6 @@
     <title>VideoTube</title>
 </head>
 <body>
-    Oh no
+    There has been an error processing your request
 </body>
 </html>

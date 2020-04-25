@@ -14,23 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
-
 /**
- *
+ * Endpoints related to authentication of users
  */
-Route::get('/login', function (Request $request) {
-
-    // Try to send an email
-
-    Mail::to('hayden@example.com')->send(new VerifyEmail());
-
-    return 'some text';
-});
-
-Route::middleware('auth:api')->post('/logout', function (Request $request) {
-    // Destroys the logged in users authentication
+Route::namespace('Auth')->group(function() {
+    Route::post('/login', 'LoginController@login')->name('login');
+    Route::get('/logout', 'LoginController@logout')->name('logout');
+    Route::post('/register', 'RegisterController@register')->name('register');
+//Route::post('/password/reset', '');
+//Route::get('/password/reset/{token}', '');
+//Route::post('/password/reset/{token}', '');
+//Route::get('/email/verify/{token}', '');
 });
 
 /**
@@ -38,4 +32,10 @@ Route::middleware('auth:api')->post('/logout', function (Request $request) {
  */
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::fallback(function() {
+    return response()->setStatusCode(404)->json([
+        'error' => 'Unknown endpoint'
+    ]);
 });

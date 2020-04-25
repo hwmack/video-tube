@@ -35,3 +35,5 @@ Route::get('/{any?}', function ($any = '') {
 Route::fallback(function () {
     return view('fallback');
 });
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -11,6 +11,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        /* Never allow running in production */
+        $env = env('APP_ENV', 'local');
+        if ($env == 'prod') {
+            return;
+        }
+
+        // Seed a verified default user for testing purposes
+        $this->call(UserSeeder::class);
     }
 }
