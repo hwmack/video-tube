@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
-class ResetPasswordController extends Controller
-{
-    use ResetsPasswords;
+class ResetPasswordController extends Controller {
 
-    protected $redirectTo = RouteServiceProvider::HOME;
+    /**
+     * Allows a user to reset their password when they forget
+     */
+
+    use ResetsPasswords;
 }

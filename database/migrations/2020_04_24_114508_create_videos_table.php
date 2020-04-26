@@ -15,9 +15,10 @@ class CreateVideosTable extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->uuid('owner');
+            $table->foreignId('owner');
             $table->string('title', 255);
             $table->text('description');
+            $table->bigInteger('watch_count');
             $table->string('location', 100);
             $table->timestamps();
         });

@@ -15,8 +15,8 @@ class CreateBookmarkTable extends Migration
     {
         Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id');
-            $table->uuid('video_id');
+            $table->foreignId('user_id');
+            $table->foreignId('video_id');
             $table->timestamps();
         });
     }

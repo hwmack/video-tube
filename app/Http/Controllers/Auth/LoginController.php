@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use http\Env\Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Class LoginController
@@ -14,8 +13,7 @@ use Illuminate\Http\Request;
  *
  * Handles requests related to the authentication of users
  */
-class LoginController extends Controller
-{
+class LoginController extends Controller {
     use AuthenticatesUsers;
 
     public function __construct() {
@@ -25,6 +23,7 @@ class LoginController extends Controller
     public function authenticated(Request $request, $user) {
         return response()->json([
             "message" => "Authenticated",
+//            "url" => URL::signedRoute('verify', ['id' => 1, 'hash' => sha1($request->user()->getEmailForVerification())])
         ]);
     }
 

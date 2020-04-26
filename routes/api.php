@@ -34,8 +34,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::fallback(function() {
-    return response()->setStatusCode(404)->json([
-        'error' => 'Unknown endpoint'
-    ]);
+Route::any('/', function (){
+    return response()->json([
+        'message' => 'Welcome'
+    ])->setStatusCode(200);
 });
+
+Route::any('{all}', function() {
+    // FIXME fix incorrect return format of endpoint
+    return response()->json([
+        'error' => 'Unknown endpoint'
+    ])->setStatusCode(404);
+})->where('all', '.*');

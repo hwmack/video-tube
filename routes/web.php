@@ -13,27 +13,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/video/{id}', function ($id) {
-    // Check the video if it exists
+/**
+ * By default return the standard view
+ */
+Route::get('/', function() {
+    return view('index');
+})->name('home');
+
+/**
+ * Verification endpoint for the user's email
+ */
+Route::namespace('Auth')->group(function() {
+    Route::get('/verify/{hash}/{id}/', 'VerificationController@verify')
+        ->name('verify');
+});
+
+/**
+ * Always return the default view, and the frontend wll handle the error
+ */
+Route::fallback(function () {
     return view('index');
 });
-
-/*
- * Default route
- */
-Route::get('/{any?}', function ($any = '') {
-    switch ($any) {
-        case '':
-        case 'login':
-        case 'register':
-            return view('index');
-        default:
-            return view('fallback');
-    }
-})->where('any', '.*');
-
-Route::fallback(function () {
-    return view('fallback');
-});
-
-Route::get('/home', 'HomeController@index')->name('home');
