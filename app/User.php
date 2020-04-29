@@ -44,7 +44,7 @@ class User extends Authenticatable
             'regex:/(?=.*?[A-Z])/', // One uppercase
             'regex:/(?=.*?[a-z])/', // One lowercase
             'regex:/(?=.*?[0-9])/', // One digit
-            'regex:/(?=.*?[\/#?!@$%^&*-])/', // One special character
+            'regex:/(?=.*?[\/#?!@$%^&*-.])/', // One special character
             // Only check matching, once the format of the password is correct
             $required ? 'confirmed' : ''
         ];

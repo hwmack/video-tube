@@ -87099,6 +87099,39 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/frontend/helpers/utils.js":
+/*!************************************************!*\
+  !*** ./resources/js/frontend/helpers/utils.js ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function defaultErrorCallback() {}
+
+function apiRequest(url, method, body) {
+  var callback = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  var errorCallback = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : defaultErrorCallback;
+  var headers = new Headers();
+  headers.append('Accept', 'application/json');
+  headers.append('Content-Type', 'application/json');
+  var data = {
+    method: method,
+    headers: headers,
+    body: JSON.stringify(body)
+  };
+  return fetch('/api' + url, data).then(function (response) {
+    return response.json().then(function (body) {
+      return callback(response, body);
+    });
+  })["catch"](errorCallback);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (apiRequest);
+
+/***/ }),
+
 /***/ "./resources/js/frontend/models/Store.js":
 /*!***********************************************!*\
   !*** ./resources/js/frontend/models/Store.js ***!
@@ -87362,7 +87395,8 @@ function CustomSpinner() {
 }
 
 function TitleComponent(props) {
-  document.title = props.title + ' | VideoTube';
+  document.title = props.title + ' | VideoTube'; // TODO May add a spinner here
+
   return props.children;
 }
 
@@ -87613,7 +87647,7 @@ var Login = /*#__PURE__*/function (_React$Component) {
         onSubmit: this.handleLogin.bind(this)
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__["default"], {
         variant: "warning",
-        className: this.state.redirect === '' ? 'd-none' : 'd-block'
+        className: !this.state.redirect ? 'd-none' : 'd-block'
       }, "You need to be logged in to view this page"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__["default"], {
         variant: "danger",
         className: this.state.error === '' ? 'd-none' : 'd-block'
@@ -87668,7 +87702,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Alert */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../helpers/utils */ "./resources/js/frontend/helpers/utils.js");
+/* harmony import */ var _models_Store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../models/Store */ "./resources/js/frontend/models/Store.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -87694,6 +87737,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
+
 var Register = /*#__PURE__*/function (_React$Component) {
   _inherits(Register, _React$Component);
 
@@ -87705,14 +87751,114 @@ var Register = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Register);
 
     _this = _super.call(this, props);
-    _this.state = {};
+    _this.state = {
+      email: '',
+      username: '',
+      password: '',
+      confirm: '',
+      form: {
+        validated: false,
+        serverError: ''
+      }
+    };
     return _this;
   }
 
   _createClass(Register, [{
+    key: "handleUpdate",
+    value: function handleUpdate(event) {
+      switch (event.target.id) {
+        case 'formEmail':
+          this.setState(_objectSpread({}, this.state, {
+            email: event.target.value
+          }));
+          break;
+
+        case 'formUsername':
+          this.setState(_objectSpread({}, this.state, {
+            username: event.target.value
+          }));
+          break;
+
+        case 'formPassword':
+          this.setState(_objectSpread({}, this.state, {
+            password: event.target.value
+          }));
+          break;
+
+        case 'formPasswordConfirm':
+          this.setState(_objectSpread({}, this.state, {
+            confirm: event.target.value
+          }));
+          break;
+      }
+    }
+  }, {
     key: "handleRegister",
-    value: function handleRegister() {// Send a request to register
-      // Notify user to verify their email
+    value: function handleRegister(event) {
+      var _this2 = this;
+
+      event.preventDefault(); // Perform basic client side validation
+
+      var form = event.currentTarget;
+
+      if (form.checkValidity() === false) {
+        this.setState(_objectSpread({}, this.state, {
+          form: _objectSpread({}, this.state.form, {
+            validated: true
+          })
+        }));
+        return false;
+      } // Exit early if the passwords don't match
+
+
+      if (this.state.password !== this.state.confirm) {
+        this.setState(_objectSpread({}, this.state, {
+          form: _objectSpread({}, this.state.form, {
+            serverError: 'The passwords do not match'
+          })
+        }));
+        return false;
+      } // If we have all the required fields, we will send it to the server and see what it says
+
+
+      var body = {
+        email: this.state.email,
+        username: this.state.username,
+        password: this.state.password,
+        password_confirmation: this.state.confirm
+      };
+      Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__["default"])('/register', 'POST', body, function (response, body) {
+        if (response.status === 200) {
+          dispatchEvent({
+            'type': 'LOGIN',
+            'user': body.user
+          });
+          _models_Store__WEBPACK_IMPORTED_MODULE_5__["default"].getState().history.push('/');
+        } else if (response.status === 422) {
+          var newState = _objectSpread({}, _this2.state);
+
+          var errors = body.errors;
+
+          if (errors.email) {
+            newState.form.serverError = errors.email[0];
+          } else if (errors.username) {
+            newState.form.serverError = errors.username[0];
+          } else if (errors.password) {
+            newState.form.serverError = errors.password[0];
+
+            if (newState.form.serverError.includes('invalid')) {
+              newState.form.serverError = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Password must fit these requirements:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "At least one uppercase letter"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "At least one lowercase letter"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "At least one digit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "At least one special character (one of these: /#?!@$%^&*-.)")));
+            }
+          } else if (errors.password_confirmation) {
+            newState.form.serverError = errors.password_confirmation[0];
+          }
+
+          _this2.setState(newState);
+        } else {
+          console.error('Error from endpoint', response);
+        }
+      }); // Notify user to verify their email
       // Redirect them to home page
     }
   }, {
@@ -87727,29 +87873,61 @@ var Register = /*#__PURE__*/function (_React$Component) {
         className: "justify-content-xl-center"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], {
         lg: 4
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+        onSubmit: this.handleRegister.bind(this),
+        noValidate: true,
+        validated: this.state.form.validated
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        variant: "danger",
+        className: this.state.form.serverError === '' ? 'd-none' : 'd-block'
+      }, this.state.form.serverError), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
         controlId: "formEmail"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Email:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Email:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
         type: "email",
-        placeholder: "Enter email"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        required: true,
+        placeholder: "Enter email",
+        value: this.state.email,
+        onChange: this.handleUpdate.bind(this)
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "invalid"
+      }, "Please enter your email."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "valid"
+      }, "Looks good!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
         controlId: "formUsername"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Username:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Username:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"].Prepend, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"].Text, null, "@")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
         type: "text",
-        placeholder: "Enter username"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        required: true,
+        placeholder: "Enter username",
+        onChange: this.handleUpdate.bind(this)
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "invalid"
+      }, "Please choose a username."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "valid"
+      }, "Looks good!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
         controlId: "formPassword"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
         type: "password",
-        placeholder: "Enter password"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        required: true,
+        placeholder: "Enter password",
+        onChange: this.handleUpdate.bind(this)
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "invalid"
+      }, "Please enter a password."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "valid"
+      }, "Looks good!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
         controlId: "formPasswordConfirm"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Confirm Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Confirm Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
         type: "password",
-        placeholder: "Re-enter password"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        required: true,
+        placeholder: "Re-enter password",
+        onChange: this.handleUpdate.bind(this)
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "invalid"
+      }, "Please confirm your password."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control.Feedback, {
+        type: "valid"
+      }, "Looks good!"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
         variant: "primary",
-        onClick: this.handleRegister
+        type: "submit"
       }, "Register"), ' '
       /* So the buttons will appear on the same line */
       , /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {

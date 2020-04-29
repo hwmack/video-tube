@@ -23,11 +23,12 @@ class RegisterController extends Controller {
 
     protected function registered(Request $request, $user) {
         // Send verification email to user
-
+        $this->sendVerificationEmail($user);
 
         // Send the response here
         return response()->json([
-            "message" => "Successfully registered user",
+            'message' => 'Successfully registered user',
+            'user' => $user,
         ]);
     }
 

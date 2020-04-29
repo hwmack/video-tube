@@ -125,7 +125,7 @@ class Login extends React.Component {
                 <Row className='justify-content-xl-center'>
                     <Col lg={4}>
                         <Form onSubmit={this.handleLogin.bind(this)}>
-                            <Alert variant='warning' className={this.state.redirect === '' ? 'd-none' : 'd-block'}>
+                            <Alert variant='warning' className={!this.state.redirect ? 'd-none' : 'd-block'}>
                                 You need to be logged in to view this page
                             </Alert>
                             <Alert variant='danger' className={this.state.error === '' ? 'd-none' : 'd-block'}>
@@ -165,6 +165,7 @@ class Login extends React.Component {
                                 </Button>
                             </Link>
                         </Form>
+                        { /* TODO Forgotten password */ }
                     </Col>
                 </Row>
             </Container>

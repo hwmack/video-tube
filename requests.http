@@ -1,0 +1,80 @@
+
+# Heart beat endpoint
+GET http://localhost:8000/api/
+
+###
+
+# 404 endpoint
+POST http://localhost:8000/api/sdfsdf
+
+###
+
+# Test Cookie
+GET http://localhost:8000/api/debug
+
+###
+
+# Login
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "email": "hayden.mack.7@gmail.com",
+    "password": "password",
+    "remember": true
+}
+
+###
+
+# Logout
+GET http://localhost:8000/api/logout
+Accept: application/json
+
+###
+
+# Register
+POST http://localhost:8000/api/register
+Accept: application/json
+Content-Type: application/json
+
+{
+    "username": "default1",
+    "email": "haydenmack7@gmail.com",
+    "password": "passwordD1/",
+    "password_confirmation": "passwordD1/"
+}
+
+###
+
+# Verify Email
+#GET http://localhost:8000/verify/7588a6e5dfc48b383aa138d5cfa3cf0ca58929ac/1?signature=f741b4fe44ae3ae6bd4890948b36bbf45384601539e47b86c7b56eced3e302a9
+#GET https://u15910656.ct.sendgrid.net/ls/click?upn=HRCA8VrLR1ORlWF6m-2F3qrXrmuHfQAXCMgES-2FWjkabwzWuCdoGbtbcyFOI2usw9L-2FUAm-2BMxtHjd6PLxPu-2Fy29eHbWbObYA9lFaMH8SLf5t4wwaLsJ6wivAjA4YRBqqUDvMBQFlKbb5ROlgBO-2BuJfhpkXdtU1EBjptyL2HdjcxcvZv59zhcM1nfm3X1eCtEg4UjbJfFHw09ngIJx0CCw3wWg-3D-3DTVQF_JUsv-2FIaPeZJNgvgqsmnwlow-2BbFUAKVPqK8EXgW9ULdNIzKPINinkTIgD4n04b-2BvKNa8OAk2e-2B5IDJ5TBqK85c2wLTAmEUpSiSojGIzxmP5k7SYm8uoot-2FGQZKpJY4UF5GsTgyWVr9wWSeuBoxumimqN86GoT6-2B5svASQ7vOoKaETtp9wNeyBaZfJqb0VkLLyuexC69zWdYUNjmmhVO6SVcvGvU5kJJwvbfahF5YjgXiGT44hlo7uuOFxemjCXIEH
+
+###
+
+# Get current user
+GET http://localhost:8000/api/user
+Accept: application/json
+
+###
+
+# Get User
+GET http://localhost:8000/api/user/2
+Accept: application/json
+
+###
+
+# Update user details
+PUT http://localhost:8000/api/user
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "hayden.mack.7@gmail.com"
+}
+
+###
+
+# Resend verification email
+POST http://localhost:8000/api/email/resend
+Accept: application/json

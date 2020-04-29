@@ -133,5 +133,8 @@ function CustomSpinner() {
 
 function TitleComponent(props) {
     document.title = props.title + ' | VideoTube'
+
+    // TODO May add a spinner here
+
     return props.children
 }
