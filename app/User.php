@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'stripe_ref'
     ];
 
     /**
@@ -38,4 +38,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function getPasswordValidation($required = false) {
+        return [$required ? 'required' : '', 'string', 'min:8',
+            'regex:/(?=.*?[A-Z])/', // One uppercase
+            'regex:/(?=.*?[a-z])/', // One lowercase
+            'regex:/(?=.*?[0-9])/', // One digit
+            'regex:/(?=.*?[\/#?!@$%^&*-])/', // One special character
+            // Only check matching, once the format of the password is correct
+            $required ? 'confirmed' : ''
+        ];
+    }
 }

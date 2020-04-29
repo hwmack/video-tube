@@ -3,22 +3,34 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    private $address;
+    private $username;
+    /**
+     * @var string
+     */
+    public $link;
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param $user
      */
-    public function __construct()
+    public function __construct($user)
     {
-        //
+        $this->address = $user->email;
+        $this->username = $user->username;
+        $this->link = URL::signedRoute('verify', [
+            'id' => $user->id,
+            'hash' => sha1($user->getEmailForVerification())
+        ]);
     }
 
     /**
@@ -28,18 +40,15 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
-        // Refactor this into the actual email
+        $subject = 'VideoTube: Verify Email';
 
-        $address = 'hayden.mack.7@gmail.com';
-        $subject = 'This is a demo!';
-        $name = 'HMACK';
-
-        return $this->view('emails.verifyemail')
-            ->to($address, $name)
-            ->cc($address, $name)
-            ->bcc($address, $name)
-            ->replyTo($address, $name)
+        return $this
+            ->to($this->address)
             ->subject($subject)
-            ->with([ 'test_message' => 'test text here!' ]);
+            ->markdown('emails.verifyemail')
+            ->with([
+                'username' => $this->username,
+                'link' => $this->link
+            ]);
     }
 }

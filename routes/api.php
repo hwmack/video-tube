@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use \Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,17 +22,58 @@ Route::namespace('Auth')->group(function() {
     Route::post('/login', 'LoginController@login')->name('login');
     Route::get('/logout', 'LoginController@logout')->name('logout');
     Route::post('/register', 'RegisterController@register')->name('register');
-//Route::post('/password/reset', '');
-//Route::get('/password/reset/{token}', '');
-//Route::post('/password/reset/{token}', '');
-//Route::get('/email/verify/{token}', '');
+    Route::post('/email/resend', 'RegisterController@resendEmail')->name('resendVerification');
+
+    // Routes dealing with resetting a forgotten password
+    Route::post('/email/reset', 'ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'ResetPasswordController@reset');
 });
 
 /**
- *
+ * Retrieve information about the current user (or a specified user)
  */
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/user/{id?}', 'UserController@get')->name('getUser');
+
+/**
+ * Allows a user to update their own personal details
+ */
+Route::put('/user', 'UserController@update')->name('updateDetails');
+
+Route::post('/follow/{user_id}')->name('followUser');
+Route::delete('/follow/{user_id}')->name('followUser');
+
+/**
+ * Routes related to video uploading and downloading
+ */
+//    Route::post('/video')->name('createVideo');
+//    Route::put('/video/{id}')->name('updateVideo');
+//    Route::post('/video/{id}')->name('uploadVideo');
+//    Route::get('/video/info/{id}')->name('videoDetails');
+//    Route::get('/video/{id}')->name('downloadVideo');
+//
+//    Route::post('/bookmark/{video_id}')->name('addBookmark');
+//    Route::delete('/bookmark/{video_id}')->name('rmBookmark');
+
+/*
+ * This will probably be moved to websockets later
+ */
+//    Route::get('/comments/{video_id}')->name('getComments');
+//    Route::post('/comments/{video_id}')->name('createComment');
+
+//    Route::post('/like/{object_id}', 'LikeController@like')->name('createLike');
+//    Route::delete('/like/{object_id}', 'LikeController@dislike')->name('createLike');
+
+/*
+ * For debugging, allow a user to get more information about a cookie
+ */
+Route::get('/debug', function(Request $request) {
+    return response()->json([
+        'message' => 'endpoint is working',
+        'cookie' => $request->cookie(),
+        'session' => $request->session(),
+        'user' => $request->user(),
+        'viaRemember' => Auth::viaRemember()
+    ]);
 });
 
 Route::any('/', function (){
@@ -41,7 +83,6 @@ Route::any('/', function (){
 });
 
 Route::any('{all}', function() {
-    // FIXME fix incorrect return format of endpoint
     return response()->json([
         'error' => 'Unknown endpoint'
     ])->setStatusCode(404);

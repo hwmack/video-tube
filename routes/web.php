@@ -13,24 +13,35 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::namespace('Auth')->group(function() {
+    /**
+     * Verification endpoint for the user's email
+     */
+    Route::get('/verify/{hash}/{id}/', 'VerificationController@verify')
+        ->name('verify');
+
+    // TODO This can be improved
+    Route::get('/verified', function () {
+        return 'Verified email address! Click <a href="' . route('home') . '">here</a> to go home';
+    })->name('verified');
+
+    /**
+     * Display form to reset password (The frontend will handle it)
+     */
+    Route::get('/password/reset/{token}', 'HomeController@index');
+});
+
+/**
+ * If the user needs to be logged in for a url
+ */
+Route::get('/login?redirect={url}', 'HomeController@index')->name('login');
+
 /**
  * By default return the standard view
  */
-Route::get('/', function() {
-    return view('index');
-})->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 
 /**
- * Verification endpoint for the user's email
+ * Always return the default view, and the frontend will handle the error
  */
-Route::namespace('Auth')->group(function() {
-    Route::get('/verify/{hash}/{id}/', 'VerificationController@verify')
-        ->name('verify');
-});
-
-/**
- * Always return the default view, and the frontend wll handle the error
- */
-Route::fallback(function () {
-    return view('index');
-});
+Route::fallback('HomeController@index');

@@ -1,4 +1,5 @@
 import { createStore } from 'redux'
+import { createBrowserHistory } from 'history'
 
 // TODO Refactor this into multiple reducers eventually
 
@@ -6,13 +7,22 @@ import { createStore } from 'redux'
  * Acts as the global store for the whole project
  */
 const seedState = {
+    history: createBrowserHistory(),
     isUserAuthenticated: false
 }
 
 const reducer = (state, action) => {
-    debugger
-    switch (action) {
-
+    switch (action.type) {
+        case 'LOGIN':
+            return {
+                ...state,
+                isUserAuthenticated: action.user
+            }
+        case 'LOGOUT':
+            return {
+                ...state,
+                isUserAuthenticated: false
+            }
     }
     return state
 }

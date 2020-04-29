@@ -4,8 +4,22 @@ import {Link} from "react-router-dom";
 
 export default class Register extends React.Component {
 
+    constructor(props) {
+        super(props)
+
+        this.state = {
+
+        }
+
+    }
+
+
     handleRegister() {
-        alert('register the user event')
+        // Send a request to register
+
+        // Notify user to verify their email
+
+        // Redirect them to home page
     }
 
     render() {
@@ -24,7 +38,7 @@ export default class Register extends React.Component {
 
                             <Form.Group controlId='formUsername'>
                                 <Form.Label>Username:</Form.Label>
-                                <Form.Control type='email' placeholder='Enter username'/>
+                                <Form.Control type='text' placeholder='Enter username'/>
                             </Form.Group>
 
                             <Form.Group controlId='formPassword'>

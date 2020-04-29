@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-    <meta charset="utf-8" />
-</head>
-<body>
-<h2>Test Email</h2>
-<p>{{ $test_message }}</p>
-</body>
-</html>
+@component('mail::message')
+
+Hello {{$username}},
+
+Thank you for signing up for VideoTube
+
+Please verify your email here:
+@component('mail::button', ['url' => $link])
+Verify email
+@endcomponent
+
+Sincerely,
+VideoTube team
+@endcomponent

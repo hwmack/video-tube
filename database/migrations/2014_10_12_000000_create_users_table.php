@@ -20,8 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 255);
 
-            /* Is used to verify the user when they get sent a forgotten password or verify email link */
-            $table->string('verification', 255)->nullable()->default(null);
+            $table->string('stripe_ref', 100)->nullable();
 
             $table->rememberToken();
             $table->timestamps();
