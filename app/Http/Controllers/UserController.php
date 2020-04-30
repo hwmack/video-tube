@@ -55,20 +55,25 @@ class UserController extends Controller
      */
     protected function update(Request $request) {
         $update = [];
-        // TODO Need to test this endpoint
+
         $validator = Validator::make($request->all(), [
             'email' => ['email', 'unique:users'],
+            'username' => ['unique:users'],
             'password' => User::getPasswordValidation()
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
-            ]);
+            ])->setStatusCode(422);
         }
 
         if ($request->filled('email')) {
             $update['email'] = $request->input('email');
+        }
+
+        if ($request->filled('username')) {
+            $update['username'] = $request->input('username');
         }
 
         if ($request->filled('password')) {

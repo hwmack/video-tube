@@ -18,7 +18,7 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <b>More content</b>
+            <b>Display all the videos here</b>
         )
     }
 }

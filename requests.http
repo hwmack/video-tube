@@ -69,9 +69,10 @@ PUT http://localhost:8000/api/user
 Accept: application/json
 Content-Type: application/json
 
-{
-    "email": "hayden.mack.7@gmail.com"
-}
+//{
+//    "email": "hayden.mack7@gmail.com"
+//}
+{"username":"jinksabc"}
 
 ###
 
