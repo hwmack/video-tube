@@ -1,17 +1,24 @@
 import * as React from 'react'
-import { Container } from "react-bootstrap"
-
-import NavBar from './NavBar'
 
 export default class Home extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            videos: [] // List of videos to display
+        }
+
+        /* Fetch some initial videos to display */
+        this.fetchVideos()
+    }
+
+    fetchVideos() {
+
+    }
+
     render() {
         return (
-            <>
-                <NavBar/>
-                <Container fluid>
-                    { /* Contains all the videos or search results here */ }
-                </Container>
-            </>
+            <b>More content</b>
         )
     }
 }

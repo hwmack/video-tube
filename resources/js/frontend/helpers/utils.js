@@ -1,6 +1,6 @@
 
-function defaultErrorCallback() {
-
+function defaultErrorCallback(err) {
+    console.error(err)
 }
 
 

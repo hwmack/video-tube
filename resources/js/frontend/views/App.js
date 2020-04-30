@@ -7,8 +7,13 @@ import { Spinner, Row } from "react-bootstrap";
 import { store } from '../models/Store'
 
 import Home from './Home'
+import Video from './Video'
+import Profile from './Profile'
 import Login from './Login'
 import Register from './Register'
+import NotFound from './NotFound'
+import LoggedInPage from '../components/LoggedInPage'
+import AddVideo from "./AddVideo";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -39,12 +44,16 @@ export default class App extends React.Component {
                     })
                 }
 
-                this.setState({
-                    ...this.state,
-                    isLoading: false
-                })
+                this.setLoading(false)
             }))
             .catch(err => console.error(err))
+    }
+
+    setLoading(loading) {
+        this.setState({
+            ...this.state,
+            isLoading: loading
+        })
     }
 
     render() {
@@ -53,30 +62,41 @@ export default class App extends React.Component {
                 {!this.state.isLoading ? (
                 <Router history={store.getState().history}>
                     <Switch>
-                        <Route exact path='/video/:id' component={null}/>
-                        <Route exact path={'/profile/:id'} component={null}/>
-                        <Route exact path={'/profile/:query'} component={null}/>
+                        <CustomRoute exact path='/' title='Home'>
+                            <LoggedInPage>
+                                <Home/>
+                            </LoggedInPage>
+                        </CustomRoute>
 
                         { /* These should only display if logged out */ }
-                        <CustomRoute isPublic title='Register' path='/register'>
+                        <CustomRoute exact isPublic title='Register' path='/register'>
                             <Register/>
                         </CustomRoute>
 
-                        <CustomRoute isPublic title='Login' path='/login'>
+                        <CustomRoute exact isPublic title='Login' path='/login'>
                             <Login history={store.getState().history}/>
                         </CustomRoute>
 
-                        <CustomRoute path='/' title='Home'>
-                            <Home/>
+                        <CustomRoute title='Video' path='/video/add'>
+                            <LoggedInPage>
+                                <AddVideo/>
+                            </LoggedInPage>
+                        </CustomRoute>
+
+                        <CustomRoute title='Video' path='/video/:id?'>
+                            <LoggedInPage>
+                                <Video/>
+                            </LoggedInPage>
+                        </CustomRoute>
+
+                        <CustomRoute title='Profile' path={['/profile', '/profile/:username']}>
+                            <LoggedInPage>
+                                <Profile/>
+                            </LoggedInPage>
                         </CustomRoute>
 
                         { /* Show 404 if the route is not found */ }
-                        <Route render={() => {
-                            // TODO Create a component for this
-                            return (
-                                <h2>404: Not Found</h2>
-                            )
-                        }}/>
+                        <Route component={NotFound}/>
                     </Switch>
                 </Router>
                     ) : (<CustomSpinner/>)}
@@ -103,8 +123,8 @@ function CustomRoute({ children, isPublic, title, ...rest }) {
 
     return (
         <Route
+            exact={true}
             {...rest}
-            exact
             render={({ location }) =>
                 checkAuth ? (
                     <TitleComponent title={title}>{children}</TitleComponent>
@@ -133,8 +153,6 @@ function CustomSpinner() {
 
 function TitleComponent(props) {
     document.title = props.title + ' | VideoTube'
-
-    // TODO May add a spinner here
 
     return props.children
 }

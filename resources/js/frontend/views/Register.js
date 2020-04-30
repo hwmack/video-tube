@@ -141,7 +141,7 @@ export default class Register extends React.Component {
             <Container fluid className='offsetContainer'>
                 <Row className='justify-content-xl-center'>
                     <h1>
-                        <img src='../logo.svg' id='public-logo'/>
+                        <img src='/logo.svg' id='public-logo'/>
                         VideoTube
                     </h1>
                 </Row>

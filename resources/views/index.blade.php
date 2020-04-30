@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="css/app.css" />
+        <link rel="stylesheet" href="/css/app.css" />
 
         <title>VideoTube</title>
     </head>
@@ -13,6 +13,6 @@
         <div id="app"></div>
 
         <!-- Import React -->
-        <script src="js/app.js"></script>
+        <script src="/js/app.js"></script>
     </body>
 </html>

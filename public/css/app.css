@@ -10893,3 +10893,8 @@ a.text-dark:focus {
   padding-bottom: 5px;
 }
 
+#main-content {
+  padding-top: 30px;
+  padding-left: 40px;
+}
+
