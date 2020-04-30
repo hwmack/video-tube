@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import Alert from "react-bootstrap/Alert"
 
 import apiRequest from '../helpers/utils'
-import store from '../models/Store'
+import { store } from '../models/Store'
 
 export default class Register extends React.Component {
 
@@ -134,17 +134,16 @@ export default class Register extends React.Component {
                 console.error('Error from endpoint', response)
             }
         })
-
-        // Notify user to verify their email
-
-        // Redirect them to home page
     }
 
     render() {
         return (
             <Container fluid className='offsetContainer'>
                 <Row className='justify-content-xl-center'>
-                    <h1>VideoTube</h1>
+                    <h1>
+                        <img src='../logo.svg' id='public-logo'/>
+                        VideoTube
+                    </h1>
                 </Row>
                 <Row className='justify-content-xl-center'>
                     <Col lg={4}>

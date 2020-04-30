@@ -120,7 +120,10 @@ class Login extends React.Component {
         return (
             <Container fluid className='offsetContainer'>
                 <Row className='justify-content-xl-center'>
-                    <h1>VideoTube</h1>
+                    <h1>
+                        <img src='../logo.svg' id='public-logo'/>
+                        VideoTube
+                    </h1>
                 </Row>
                 <Row className='justify-content-xl-center'>
                     <Col lg={4}>

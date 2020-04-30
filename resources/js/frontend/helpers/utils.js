@@ -4,7 +4,7 @@ function defaultErrorCallback() {
 }
 
 
-function apiRequest(url, method, body, callback = null, errorCallback = defaultErrorCallback) {
+function apiRequest(url, method, body = null, callback = null, errorCallback = defaultErrorCallback) {
     let headers = new Headers()
     headers.append('Accept', 'application/json')
     headers.append('Content-Type', 'application/json')
@@ -12,7 +12,7 @@ function apiRequest(url, method, body, callback = null, errorCallback = defaultE
     let data = {
         method,
         headers,
-        body: JSON.stringify(body)
+        body: body != null ? JSON.stringify(body) : null
     }
 
     return fetch('/api' + url, data)
