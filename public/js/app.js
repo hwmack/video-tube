@@ -88459,7 +88459,6 @@ var AddVideo = /*#__PURE__*/function (_React$Component) {
         sm: 8
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
         as: "textarea",
-        resizable: false,
         rows: "3",
         placeholder: "Description"
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
@@ -89385,7 +89384,7 @@ var Register = /*#__PURE__*/function (_React$Component) {
       };
       Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__["default"])('/register', 'POST', body, function (response, body) {
         if (response.status === 200) {
-          dispatchEvent({
+          _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].dispatch({
             'type': 'LOGIN',
             'user': body.user
           });

@@ -93,7 +93,7 @@ export default class Register extends React.Component {
 
         apiRequest('/register', 'POST', body, (response, body) => {
             if (response.status === 200) {
-                dispatchEvent({
+                store.dispatch({
                     'type': 'LOGIN',
                     'user': body.user
                 })

@@ -20,7 +20,7 @@ export default class AddVideo extends React.Component {
 
                     <Form.Group as={Row} controlId='formDescription'>
                         <Col sm={8}>
-                            <Form.Control as='textarea' resizable={false} rows='3' placeholder='Description'/>
+                            <Form.Control as='textarea' rows='3' placeholder='Description'/>
                         </Col>
                     </Form.Group>
 
