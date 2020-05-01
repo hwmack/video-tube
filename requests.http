@@ -79,3 +79,28 @@ Content-Type: application/json
 # Resend verification email
 POST http://localhost:8000/api/email/resend
 Accept: application/json
+
+###
+
+# Send password reset request
+POST http://localhost:8000/api/email/reset
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "hayden.mack.7@gmail.com"
+}
+
+###
+
+# Send new password for the reset
+POST http://localhost:8000/api/password/reset
+Accept: application/json
+Content-Type: application/json
+
+{
+    "token": "0e151ffdd2d65c61c1d061cd9ef71e1b63c6a747a5614f0d959d8999aee53287",
+    "email": "hayden.mack7@gmail.com",
+    "password": "newPassword1",
+    "password_confirmation": "newPassword1"
+}

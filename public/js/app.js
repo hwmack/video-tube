@@ -88514,6 +88514,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _NotFound__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./NotFound */ "./resources/js/frontend/views/NotFound.js");
 /* harmony import */ var _components_LoggedInPage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/LoggedInPage */ "./resources/js/frontend/components/LoggedInPage.js");
 /* harmony import */ var _AddVideo__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./AddVideo */ "./resources/js/frontend/views/AddVideo.js");
+/* harmony import */ var _ResetPassword__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./ResetPassword */ "./resources/js/frontend/views/ResetPassword.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -88547,6 +88548,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
 
 
 
@@ -88637,9 +88639,11 @@ var App = /*#__PURE__*/function (_React$Component) {
         isPublic: true,
         title: "Login",
         path: "/login"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Login__WEBPACK_IMPORTED_MODULE_9__["default"], {
-        history: _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].getState().history
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Login__WEBPACK_IMPORTED_MODULE_9__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
+        isPublic: true,
+        title: "Profile",
+        path: "/password/reset/:token"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_ResetPassword__WEBPACK_IMPORTED_MODULE_14__["default"], null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
         title: "Video",
         path: "/video/add"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_LoggedInPage__WEBPACK_IMPORTED_MODULE_12__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_AddVideo__WEBPACK_IMPORTED_MODULE_13__["default"], null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
@@ -88678,15 +88682,33 @@ function CustomRoute(_ref) {
     checkAuth = !checkAuth;
     pathName = '/';
   }
+  /**
+   * Loop over the children for this component, and pass the new props into it
+   *
+   * TODO This was a bit of a rushed solution
+   */
+
+
+  var childrenWithProps = function childrenWithProps(childProps) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.map(children, function (child) {
+      if (react__WEBPACK_IMPORTED_MODULE_0___default.a.isValidElement(child)) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.cloneElement(child, childProps);
+      }
+
+      return child;
+    });
+  };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], _extends({
     exact: true
   }, rest, {
     render: function render(_ref2) {
-      var location = _ref2.location;
+      var location = _ref2.location,
+          childProps = _objectWithoutProperties(_ref2, ["location"]);
+
       return checkAuth ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(TitleComponent, {
         title: title
-      }, children) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+      }, childrenWithProps(childProps)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
         to: {
           pathname: pathName,
           state: {
@@ -88807,6 +88829,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _models_Store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/Store */ "./resources/js/frontend/models/Store.js");
 /* harmony import */ var react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap/Alert */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helpers/utils */ "./resources/js/frontend/helpers/utils.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -88842,6 +88865,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Login = /*#__PURE__*/function (_React$Component) {
   _inherits(Login, _React$Component);
 
@@ -88860,7 +88884,12 @@ var Login = /*#__PURE__*/function (_React$Component) {
       password: '',
       remember: false,
       error: '',
-      redirect: params.get('redirect')
+      redirect: params.get('redirect'),
+      // Modal related fields
+      showModal: false,
+      modalEmail: '',
+      modalError: '',
+      modalSuccess: false
     };
     return _this;
   }
@@ -88952,7 +88981,53 @@ var Login = /*#__PURE__*/function (_React$Component) {
             remember: event.target.checked
           }));
           break;
+
+        case 'modalEmail':
+          this.setState(_objectSpread({}, this.state, {
+            modalEmail: event.target.value
+          }));
+          break;
       }
+    }
+  }, {
+    key: "forgotPasswordModal",
+    value: function forgotPasswordModal() {
+      this.setState(_objectSpread({}, this.state, {
+        showModal: !this.state.showModal,
+        modalEmail: ''
+      }));
+    }
+  }, {
+    key: "sendForgotPasswordEmail",
+    value: function sendForgotPasswordEmail() {
+      var _this3 = this;
+
+      this.setState(_objectSpread({}, this.state, {
+        modalError: '',
+        modalSuccess: false
+      }));
+      var body = {
+        'email': this.state.modalEmail
+      };
+      console.log(body);
+      Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_5__["default"])('/email/reset', 'POST', body, function (response, body) {
+        if (response.status === 200) {
+          _this3.setState(_objectSpread({}, _this3.state, {
+            modalError: '',
+            modalSuccess: true
+          }));
+        } else {
+          if (body.errors !== null) {
+            _this3.setState(_objectSpread({}, _this3.state, {
+              modalError: body.errors.email[0]
+            }));
+          } else {
+            _this3.setState(_objectSpread({}, _this3.state, {
+              modalError: "Could not send reset password link."
+            }));
+          }
+        }
+      });
     }
     /**
      * Render the login page
@@ -88996,20 +89071,46 @@ var Login = /*#__PURE__*/function (_React$Component) {
         type: "password",
         placeholder: "Enter password",
         onChange: this.updateForm.bind(this)
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
         controlId: "formRemember"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Check, {
         type: "switch",
         label: "Remember me",
         onChange: this.updateForm.bind(this)
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], {
+        className: "d-flex justify-content-end"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        variant: "link",
+        onClick: this.forgotPasswordModal.bind(this)
+      }, "Forgot your password?"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
         type: "submit",
         variant: "primary"
       }, "Log In"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
         to: "/register"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
         variant: "outline-primary"
-      }, "Register"))))));
+      }, "Register"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
+        show: this.state.showModal,
+        onHide: this.forgotPasswordModal.bind(this)
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Title, null, "Forgot Password")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        variant: "danger",
+        className: this.state.modalError === '' ? 'd-none' : 'd-block'
+      }, this.state.modalError), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        variant: "success",
+        className: this.state.modalSuccess === false ? 'd-none' : 'd-block'
+      }, "We have sent a reset password link to you. This will expire in 60 minutes."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        controlId: "modalEmail"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Email:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "email",
+        placeholder: "Enter email",
+        onChange: this.updateForm.bind(this)
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"].Footer, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        variant: "secondary",
+        onClick: this.forgotPasswordModal.bind(this)
+      }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        variant: "primary",
+        onClick: this.sendForgotPasswordEmail.bind(this)
+      }, "Reset Password"))));
     }
   }]);
 
@@ -89692,6 +89793,195 @@ var Register = /*#__PURE__*/function (_React$Component) {
   }]);
 
   return Register;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/frontend/views/ResetPassword.js":
+/*!******************************************************!*\
+  !*** ./resources/js/frontend/views/ResetPassword.js ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ResetPassword; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap/Alert */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../helpers/utils */ "./resources/js/frontend/helpers/utils.js");
+/* harmony import */ var _models_Store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../models/Store */ "./resources/js/frontend/models/Store.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+
+
+
+
+
+
+var ResetPassword = /*#__PURE__*/function (_React$Component) {
+  _inherits(ResetPassword, _React$Component);
+
+  var _super = _createSuper(ResetPassword);
+
+  function ResetPassword(props) {
+    var _this;
+
+    _classCallCheck(this, ResetPassword);
+
+    _this = _super.call(this, props);
+    var params = new URL(window.location).searchParams;
+    console.debug(props.match.params.token);
+    console.debug(params.get('email'));
+    _this.state = {
+      token: props.match.params.token,
+      email: params.get('email'),
+      password: '',
+      password_confirmation: '',
+      serverError: '',
+      success: false
+    };
+    return _this;
+  }
+
+  _createClass(ResetPassword, [{
+    key: "handleUpdate",
+    value: function handleUpdate(event) {
+      switch (event.target.id) {
+        case 'formPassword':
+          this.setState(_objectSpread({}, this.state, {
+            password: event.target.value
+          }));
+          break;
+
+        case 'formPasswordConfirm':
+          this.setState(_objectSpread({}, this.state, {
+            password_confirmation: event.target.value
+          }));
+          break;
+      }
+    }
+  }, {
+    key: "handleForgotPassword",
+    value: function handleForgotPassword(event) {
+      var _this2 = this;
+
+      event.preventDefault();
+      var data = {
+        token: this.state.token,
+        email: this.state.email,
+        password: this.state.password,
+        password_confirmation: this.state.password_confirmation
+      };
+      this.setState(_objectSpread({}, this.state, {
+        serverError: ''
+      }));
+      Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__["default"])('/password/reset', 'POST', data, function (response, body) {
+        if (response.status === 200) {
+          _this2.setState(_objectSpread({}, _this2.state, {
+            success: true
+          }));
+
+          _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].dispatch({
+            type: 'LOGIN',
+            user: body.user
+          });
+          setTimeout(function (_) {
+            return _this2.props.history.push('/');
+          }, 1000);
+        } else {
+          _this2.setState(_objectSpread({}, _this2.state, {
+            serverError: body.errors.password[0] // FIXME this will cause an error some time
+
+          }));
+        }
+      }, function (err) {
+        return console.log(err);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+        fluid: true,
+        className: "offsetContainer"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], {
+        className: "justify-content-xl-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "/logo.svg",
+        id: "public-logo"
+      }), "VideoTube")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], {
+        className: "justify-content-xl-center"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], {
+        lg: 4
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+        onSubmit: this.handleForgotPassword.bind(this)
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h4", null, "Reset Password"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        variant: "danger",
+        className: this.state.serverError === '' ? 'd-none' : 'd-block'
+      }, this.state.serverError), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        variant: "success",
+        className: this.state.success === false ? 'd-none' : 'd-block'
+      }, "Successfully changed your password!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        controlId: "formPassword"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "password",
+        required: true,
+        placeholder: "Enter password",
+        onChange: this.handleUpdate.bind(this)
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        controlId: "formPasswordConfirm"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, null, "Confirm Password:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "password",
+        required: true,
+        placeholder: "Re-enter password",
+        onChange: this.handleUpdate.bind(this)
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        variant: "primary",
+        type: "submit"
+      }, "Reset Password"), ' '
+      /* So the buttons will appear on the same line */
+      , /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
+        to: "/"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        variant: "outline-primary"
+      }, "Go Home"))))));
+    }
+  }]);
+
+  return ResetPassword;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 

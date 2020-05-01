@@ -1,10 +1,11 @@
 import React from 'react';
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 
 import { store } from '../models/Store'
 import Alert from "react-bootstrap/Alert";
+import apiRequest from "../helpers/utils";
 
 class Login extends React.Component {
 
@@ -19,7 +20,13 @@ class Login extends React.Component {
             password: '',
             remember: false,
             error: '',
-            redirect: params.get('redirect')
+            redirect: params.get('redirect'),
+
+            // Modal related fields
+            showModal: false,
+            modalEmail: '',
+            modalError: '',
+            modalSuccess: false
         }
     }
 
@@ -108,7 +115,56 @@ class Login extends React.Component {
                     remember: event.target.checked
                 })
                 break
+            case 'modalEmail':
+                this.setState({
+                    ...this.state,
+                    modalEmail: event.target.value
+                })
+                break
         }
+    }
+
+    forgotPasswordModal() {
+        this.setState({
+            ...this.state,
+            showModal: !this.state.showModal,
+            modalEmail: ''
+        })
+    }
+
+    sendForgotPasswordEmail() {
+        this.setState({
+            ...this.state,
+            modalError: '',
+            modalSuccess: false
+        })
+
+        let body = {
+            'email': this.state.modalEmail
+        }
+
+        console.log(body)
+        apiRequest('/email/reset', 'POST', body, (response, body) => {
+            if (response.status === 200) {
+                this.setState({
+                    ...this.state,
+                    modalError: '',
+                    modalSuccess: true
+                })
+            } else {
+                if (body.errors !== null) {
+                    this.setState({
+                        ...this.state,
+                        modalError: body.errors.email[0]
+                    })
+                } else {
+                    this.setState({
+                        ...this.state,
+                        modalError: "Could not send reset password link."
+                    })
+                }
+            }
+        })
     }
 
     /**
@@ -151,12 +207,22 @@ class Login extends React.Component {
                                     onChange={this.updateForm.bind(this)}/>
                             </Form.Group>
 
-                            <Form.Group controlId='formRemember'>
-                                <Form.Check
-                                    type="switch"
-                                    label="Remember me"
-                                    onChange={this.updateForm.bind(this)}/>
-                            </Form.Group>
+                            <Row>
+                                <Col>
+                                    <Form.Group controlId='formRemember'>
+                                        <Form.Check
+                                            type="switch"
+                                            label="Remember me"
+                                            onChange={this.updateForm.bind(this)}/>
+                                    </Form.Group>
+                                </Col>
+
+                                <Col className='d-flex justify-content-end'>
+                                    <Button variant='link' onClick={this.forgotPasswordModal.bind(this)}>
+                                        Forgot your password?
+                                    </Button>
+                                </Col>
+                            </Row>
 
                             <Button type='submit' variant='primary'>
                                 Log In
@@ -171,6 +237,41 @@ class Login extends React.Component {
                         { /* TODO Forgotten password */ }
                     </Col>
                 </Row>
+
+                {/* Forgotten password modal  */}
+                <Modal show={this.state.showModal}
+                       onHide={this.forgotPasswordModal.bind(this)}>
+                    <Modal.Header>
+                        <Modal.Title>
+                            Forgot Password
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Alert variant='danger' className={this.state.modalError === '' ? 'd-none' : 'd-block'}>
+                            {this.state.modalError}
+                        </Alert>
+                        <Alert variant='success' className={this.state.modalSuccess === false ? 'd-none' : 'd-block'}>
+                            We have sent a reset password link to you. This will expire in 60 minutes.
+                        </Alert>
+                        <Form.Group controlId='modalEmail'>
+                            <Form.Label>Email:</Form.Label>
+                            <Form.Control
+                                type='email'
+                                placeholder='Enter email'
+                                onChange={this.updateForm.bind(this)}/>
+                        </Form.Group>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={this.forgotPasswordModal.bind(this)}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={this.sendForgotPasswordEmail.bind(this)}>
+                            Reset Password
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+
             </Container>
         )
     }

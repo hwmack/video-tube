@@ -14,6 +14,7 @@ import Register from './Register'
 import NotFound from './NotFound'
 import LoggedInPage from '../components/LoggedInPage'
 import AddVideo from "./AddVideo";
+import ResetPassword from './ResetPassword'
 
 export default class App extends React.Component {
     constructor(props) {
@@ -72,9 +73,11 @@ export default class App extends React.Component {
                         <CustomRoute exact isPublic title='Register' path='/register'>
                             <Register/>
                         </CustomRoute>
-
                         <CustomRoute exact isPublic title='Login' path='/login'>
-                            <Login history={store.getState().history}/>
+                            <Login/>
+                        </CustomRoute>
+                        <CustomRoute isPublic title='Profile' path='/password/reset/:token'>
+                            <ResetPassword/>
                         </CustomRoute>
 
                         <CustomRoute title='Video' path='/video/add'>
@@ -121,13 +124,27 @@ function CustomRoute({ children, isPublic, title, ...rest }) {
         pathName = '/'
     }
 
+    /**
+     * Loop over the children for this component, and pass the new props into it
+     *
+     * TODO This was a bit of a rushed solution
+     */
+    const childrenWithProps = childProps =>
+        React.Children.map(children, child => {
+            if (React.isValidElement(child)) {
+                return React.cloneElement(child, childProps)
+            }
+
+            return child;
+        })
+
     return (
         <Route
             exact={true}
             {...rest}
-            render={({ location }) =>
+            render={({ location, ...childProps }) =>
                 checkAuth ? (
-                    <TitleComponent title={title}>{children}</TitleComponent>
+                    <TitleComponent title={title}>{childrenWithProps(childProps)}</TitleComponent>
                 ) : (
                     <Redirect
                         to={{

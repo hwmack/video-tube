@@ -24,12 +24,13 @@ Route::namespace('Auth')->group(function() {
     Route::get('/verified', function () {
         return 'Verified email address! Click <a href="' . route('home') . '">here</a> to go home';
     })->name('verified');
-
-    /**
-     * Display form to reset password (The frontend will handle it)
-     */
-    Route::get('/password/reset/{token}', 'HomeController@index');
 });
+
+/**
+ * Display form to reset password (The frontend will handle it)
+ */
+Route::get('/password/reset/{token}', 'HomeController@index')
+    ->name('password.reset');
 
 /**
  * If the user needs to be logged in for a url

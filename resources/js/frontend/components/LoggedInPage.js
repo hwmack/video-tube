@@ -7,7 +7,7 @@ export default function LoggedInPage(props) {
     return (
         <>
            <NavBar/>
-            <Container id='main-content' >
+            <Container id='main-content'>
                 {props.children}
             </Container>
         </>
