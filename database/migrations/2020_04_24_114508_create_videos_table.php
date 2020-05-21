@@ -18,8 +18,11 @@ class CreateVideosTable extends Migration
             $table->foreignId('owner');
             $table->string('title', 255);
             $table->text('description');
-            $table->bigInteger('watch_count');
-            $table->string('location', 100);
+            $table->bigInteger('watch_count')
+                ->default(0);
+            $table->string('location', 200);
+            $table->string('preview_location', 200)
+                ->nullable(true); // TODO Change this so it's not nullable after finished implementing
             $table->timestamps();
         });
     }

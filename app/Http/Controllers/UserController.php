@@ -22,13 +22,10 @@ class UserController extends Controller
 
     /**
      * Fetch a user from the database
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|object
      */
-    protected function get(Request $request, $id = null) {
-        $user = $id != null ?
-            User::where('id', $id)->first()
+    protected function get(Request $request, $username = null) {
+        $user = $username != null ?
+            User::where('username', $username)->first()
             : $request->user();
 
         if ($user == null) {
@@ -39,11 +36,12 @@ class UserController extends Controller
             ])->setStatusCode(400);
         }
 
-        $videos = Video::where('owner', $user->id);
+        // Pull the videos and bookmarks for the user
+        $user->videos;
+        $user->bookmarks;
 
         return response()->json([
             'user' => $user,
-            'videos' => $videos,
         ]);
     }
 

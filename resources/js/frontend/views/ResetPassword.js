@@ -3,7 +3,7 @@ import {Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import {Link} from "react-router-dom";
 
-import apiRequest from "../helpers/utils";
+import { apiRequest } from "../helpers/utils";
 import { store } from '../models/Store'
 
 export default class ResetPassword extends React.Component {
@@ -12,8 +12,8 @@ export default class ResetPassword extends React.Component {
 
         let params = new URL(window.location).searchParams
 
-        console.debug(props.match.params.token)
-        console.debug(params.get('email'))
+        // console.debug(props.match.params.token)
+        // console.debug(params.get('email'))
 
         this.state = {
             token: props.match.params.token,

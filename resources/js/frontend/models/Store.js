@@ -1,5 +1,7 @@
 import { createStore } from 'redux'
 import { createBrowserHistory } from 'history'
+import * as actions from './Actions'
+
 
 // TODO Refactor this into multiple reducers eventually
 
@@ -8,23 +10,31 @@ import { createBrowserHistory } from 'history'
  */
 const seedState = {
     history: createBrowserHistory(),
-    isUserAuthenticated: false
+    isUserAuthenticated: false,
+    displayVideoDialog: false,
 }
 
-const reducer = (state, action) => {
+const reducer = (state = seedState, action) => {
     switch (action.type) {
-        case 'LOGIN':
+        case actions.LOGIN:
+        case actions.REGISTER:
             return {
                 ...state,
-                isUserAuthenticated: action.user
+                isUserAuthenticated: action.user,
             }
-        case 'LOGOUT':
+        case actions.LOGOUT:
             return {
                 ...state,
-                isUserAuthenticated: false
+                isUserAuthenticated: false,
             }
+        case actions.VIDEO_DISPLAY:
+            return {
+                ...state,
+                displayVideoDialog: action.display,
+            }
+        default:
+            return state
     }
-    return state
 }
 
 /**

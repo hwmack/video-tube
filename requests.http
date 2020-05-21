@@ -104,3 +104,8 @@ Content-Type: application/json
     "password": "newPassword1",
     "password_confirmation": "newPassword1"
 }
+
+###
+
+# Check verification
+GET http://localhost:8000/verified

@@ -32,22 +32,22 @@ Route::namespace('Auth')->group(function() {
 /**
  * Retrieve information about the current user (or a specified user)
  */
-Route::get('/user/{id?}', 'UserController@get')->name('getUser');
+Route::get('/user/{username?}', 'UserController@get')->name('getUser');
 
 /**
  * Allows a user to update their own personal details
  */
 Route::put('/user', 'UserController@update')->name('updateDetails');
 
-Route::post('/follow/{user_id}')->name('followUser');
-Route::delete('/follow/{user_id}')->name('followUser');
+//Route::post('/follow/{user_id}')->name('followUser');
+//Route::delete('/follow/{user_id}')->name('followUser');
 
 /**
  * Routes related to video uploading and downloading
  */
-//    Route::post('/video')->name('createVideo');
+Route::post('/video', 'VideoController@create')->name('createVideo');
+Route::post('/video/{id}', 'VideoController@upload')->name('uploadVideo');
 //    Route::put('/video/{id}')->name('updateVideo');
-//    Route::post('/video/{id}')->name('uploadVideo');
 //    Route::get('/video/info/{id}')->name('videoDetails');
 //    Route::get('/video/{id}')->name('downloadVideo');
 //

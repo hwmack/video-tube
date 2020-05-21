@@ -19,12 +19,9 @@ Route::namespace('Auth')->group(function() {
      */
     Route::get('/verify/{hash}/{id}/', 'VerificationController@verify')
         ->name('verify');
-
-    // TODO This can be improved
-    Route::get('/verified', function () {
-        return 'Verified email address! Click <a href="' . route('home') . '">here</a> to go home';
-    })->name('verified');
 });
+
+Route::get('/verified', 'HomeController@index')->name('verified');
 
 /**
  * Display form to reset password (The frontend will handle it)

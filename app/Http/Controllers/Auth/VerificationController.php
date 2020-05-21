@@ -13,7 +13,8 @@ class VerificationController extends Controller {
     use VerifiesEmails;
 
     public function __construct() {
-        $this->middleware('auth');
+        // TODO Should the user have to be signed in to hit this endpoint?
+//        $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }

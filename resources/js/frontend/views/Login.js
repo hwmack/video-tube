@@ -1,11 +1,13 @@
 import React from 'react';
-import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { withRouter } from "react-router-dom";
+import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { loginRequest } from '../models/Requests'
 
 import { store } from '../models/Store'
-import Alert from "react-bootstrap/Alert";
-import apiRequest from "../helpers/utils";
+import Alert from 'react-bootstrap/Alert';
+import { apiRequest } from '../helpers/utils';
+import { LOGIN } from '../models/Actions';
 
 class Login extends React.Component {
 
@@ -26,7 +28,7 @@ class Login extends React.Component {
             showModal: false,
             modalEmail: '',
             modalError: '',
-            modalSuccess: false
+            modalSuccess: false,
         }
     }
 
@@ -38,56 +40,39 @@ class Login extends React.Component {
     handleLogin(event) {
         event.preventDefault()
 
-        let headers = new Headers()
-        headers.append('Accept', 'application/json')
-        headers.append('Content-Type', 'application/json')
+        const callback = (response, body) => {
+            if (response.status === 200) {
+                // Logged in, go to home page
+                store.dispatch({
+                    type: LOGIN,
+                    user: body.user,
+                })
 
-        let body = {
-            email: this.state.email,
-            password: this.state.password,
-        }
-
-        if (this.state.remember) {
-            body.remember = this.state.remember
-        }
-
-        let data = {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(body)
-        }
-
-        fetch('api/login', data)
-            .then(response => response.json().then(body => {
-                if (response.status === 200) {
-                    // Logged in, go to home page
-                    store.dispatch({
-                        type: 'LOGIN',
-                        user: body.user
-                    })
-
-                    // Route to a new page
-                    if (this.state.redirect) {
-                        window.location = this.state.redirect
-                    }
-                    store.getState().history.push('/')
-                } else if (response.status === 422) {
-                    // Display errors from the server
-                    if (body.errors.email.length !== 0) {
-                        this.setState({
-                            ...this.state,
-                            error: body.errors.email[0],
-                            password: ''
-                        })
-                    }
+                // Route to a new page
+                if (this.state.redirect) {
+                    // Get the url out of the param and decode it
+                    window.location = decodeURIComponent(this.state.redirect)
                 } else {
-                    // Some other error
-                    console.error('Unexpected response', response)
+                    store.getState().history.push('/')
                 }
-            }))
-            .catch(err => {
-                console.error('Error accessing endpoint', err)
-            });
+            } else if (response.status === 422) {
+                // Display errors from the server
+                if (body.errors.email.length !== 0) {
+                    this.setState({
+                        ...this.state,
+                        error: body.errors.email[0],
+                        password: '',
+                    })
+                }
+            } else {
+                // Some other error
+                console.error('Unexpected response', response)
+            }
+        }
+
+        // Build the request and perform it
+        loginRequest(this.state.email, this.state.password, this.state.remember)(callback)
+
     }
 
     /**
@@ -100,25 +85,25 @@ class Login extends React.Component {
             case 'formEmail':
                 this.setState({
                     ...this.state,
-                    email: event.target.value
+                    email: event.target.value,
                 })
                 break
             case 'formPassword':
                 this.setState({
                     ...this.state,
-                    password: event.target.value
+                    password: event.target.value,
                 })
                 break
             case 'formRemember':
                 this.setState({
                     ...this.state,
-                    remember: event.target.checked
+                    remember: event.target.checked,
                 })
                 break
             case 'modalEmail':
                 this.setState({
                     ...this.state,
-                    modalEmail: event.target.value
+                    modalEmail: event.target.value,
                 })
                 break
         }
@@ -128,7 +113,7 @@ class Login extends React.Component {
         this.setState({
             ...this.state,
             showModal: !this.state.showModal,
-            modalEmail: ''
+            modalEmail: '',
         })
     }
 
@@ -136,31 +121,30 @@ class Login extends React.Component {
         this.setState({
             ...this.state,
             modalError: '',
-            modalSuccess: false
+            modalSuccess: false,
         })
 
         let body = {
-            'email': this.state.modalEmail
+            'email': this.state.modalEmail,
         }
 
-        console.log(body)
         apiRequest('/email/reset', 'POST', body, (response, body) => {
             if (response.status === 200) {
                 this.setState({
                     ...this.state,
                     modalError: '',
-                    modalSuccess: true
+                    modalSuccess: true,
                 })
             } else {
                 if (body.errors !== null) {
                     this.setState({
                         ...this.state,
-                        modalError: body.errors.email[0]
+                        modalError: body.errors.email[0],
                     })
                 } else {
                     this.setState({
                         ...this.state,
-                        modalError: "Could not send reset password link."
+                        modalError: 'Could not send reset password link.',
                     })
                 }
             }
@@ -234,7 +218,7 @@ class Login extends React.Component {
                                 </Button>
                             </Link>
                         </Form>
-                        { /* TODO Forgotten password */ }
+                        { /* TODO Forgotten password */}
                     </Col>
                 </Row>
 

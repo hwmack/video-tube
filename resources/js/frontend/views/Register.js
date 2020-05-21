@@ -3,8 +3,9 @@ import { Button, Col, Container, Form, Row, InputGroup } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import Alert from "react-bootstrap/Alert"
 
-import apiRequest from '../helpers/utils'
+import { apiRequest } from '../helpers/utils'
 import { store } from '../models/Store'
+import {REGISTER} from "../models/Actions";
 
 export default class Register extends React.Component {
 
@@ -94,7 +95,7 @@ export default class Register extends React.Component {
         apiRequest('/register', 'POST', body, (response, body) => {
             if (response.status === 200) {
                 store.dispatch({
-                    'type': 'LOGIN',
+                    'type': REGISTER,
                     'user': body.user
                 })
 

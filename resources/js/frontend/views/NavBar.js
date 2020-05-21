@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from 'react'
 import {
     Alert,
     Row,
@@ -8,25 +8,29 @@ import {
     NavItem,
     NavLink,
     Form,
-    FormControl,
     Button,
-    InputGroup
-    } from "react-bootstrap"
-import { GoSearch, GoPlus } from "react-icons/go";
+    InputGroup,
+} from 'react-bootstrap'
+import { GoSearch, GoPlus } from 'react-icons/go';
+import { Link } from 'react-router-dom'
 
-import apiRequest from "../helpers/utils"
+import { apiRequest } from '../helpers/utils'
 import { store } from '../models/Store'
-import {Link} from "react-router-dom";
+import { LOGOUT, VIDEO_DISPLAY } from '../models/Actions'
+import AddVideo from './AddVideo'
 
 function handleLogout() {
     apiRequest('/logout', 'GET', null, _ => {
-        store.dispatch({type: 'LOGOUT'})
+        store.dispatch({type: LOGOUT})
         store.getState().history.push('/')
     })
 }
 
 function handleAddVideo() {
-    store.getState().history.push('/video/add')
+    store.dispatch({
+        type: VIDEO_DISPLAY,
+        display: true,
+    })
 }
 
 function handleProfile() {
@@ -40,11 +44,10 @@ function resendVerificationEmail() {
     })
 }
 
-function displayNotifications() {
-    /* FIXME has bug where it won't render until the page is refreshed */
-    if (store.getState().isUserAuthenticated.email_verified_at === null) {
+function displayNotifications(_) {
+    if (store.getState().isUserAuthenticated['email_verified_at'] == null) {
         return (
-            <Row fluid className='d-flex justify-content-center'>
+            <Row className='d-flex justify-content-center'>
                 <Alert variant='warning'>
                     Please verify your email.
                     If you haven't received it, click{' '}
@@ -59,6 +62,13 @@ function displayNotifications() {
 }
 
 export default function NavBar(props) {
+    let [displayed, setDisplay] = React.useState(false)
+
+    // Hopefully only one of these methods are subscribed, seems like it at the moment
+    store.subscribe(_ => {
+        setDisplay(store.getState().displayVideoDialog)
+    })
+
     return (
         <>
             <Navbar bg='light' variant='light'>
@@ -75,10 +85,10 @@ export default function NavBar(props) {
                         </Navbar.Brand>
                     </Link>
                 </Col>
-                <Col sm={8} className='d-flex justify-content-center'>
-                    <Form inline>
+                <Col xs={5} className='d-flex justify-content-center'>
+                    <Form id='search-box'>
                         <InputGroup>
-                            <FormControl type="text" placeholder="Search" className='flex-fill' />
+                            <Form.Control type='text' placeholder="Search"/>
                             <InputGroup.Append>
                                 <Button variant="outline-primary"><GoSearch/></Button>
                             </InputGroup.Append>
@@ -96,7 +106,8 @@ export default function NavBar(props) {
                     </Dropdown>
                 </Col>
             </Navbar>
-            {displayNotifications()}
+            {displayNotifications(props.update)}
+            {displayed ? <AddVideo/> : ''}
         </>
     )
 }

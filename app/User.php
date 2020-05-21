@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -39,6 +38,66 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * A User has many videos
+     */
+    public function videos() {
+        return $this->hasMany('App\Video', 'owner');
+    }
+
+    /**
+     * A User has many notifications
+     */
+    public function notifications() {
+        return $this->hasMany('App\Notification');
+    }
+
+    /**
+     * A User has many likes
+     */
+    public function likes() {
+        return $this->hasMany('App\Like');
+    }
+
+    /**
+     * A User can bookmark many videos
+     */
+    public function bookmarks() {
+        return $this->hasMany('App\Bookmark');
+    }
+
+    /**
+     * A User can follow many other users
+     */
+    public function follows() {
+        return $this->hasMany('App\Follow', 'follower');
+    }
+
+    /**
+     * A User can be followed by many other users
+     */
+    public function followers() {
+        return $this->hasMany('App\Follow', 'followee');
+    }
+
+    /**
+     * A User can have a history
+     */
+    public function history() {
+        return $this->hasMany('App\History');
+    }
+
+    /**
+     * A User can write many comments
+     */
+    public function comments() {
+        return $this->hasMany('App\Comment');
+    }
+
+
+    /**
+     * The validator for a valid User object
+     */
     public static function getPasswordValidation($required = false) {
         return [$required ? 'required' : '', 'string', 'min:8',
             'regex:/(?=.*?[A-Z])/', // One uppercase

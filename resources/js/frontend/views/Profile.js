@@ -2,12 +2,18 @@ import React from 'react'
 import { Form, Row, Col, Button } from "react-bootstrap"
 
 import { store } from '../models/Store'
-import apiRequest from "../helpers/utils";
+import { apiRequest } from "../helpers/utils";
 import Alert from "react-bootstrap/Alert";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
+
+        if (props.match.params.username !== undefined) {
+            // TODO update so it can handle another users profile
+            alert('Unsupported profile page')
+            store.getState().history.push('/')
+        }
 
         let user = store.getState().isUserAuthenticated
 
