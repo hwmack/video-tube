@@ -34,7 +34,10 @@ class VideoController extends Controller
         $video->owner = $request->user()->id;
         $video->title = $request->input('title');
         $video->description = $request->input('description');
-        $video->location = $request->file('video')->store('videos');
+
+        // Store the video on a public disk
+        $video->location = $request->file('video')
+            ->store('videos', $options = [ 'disk' => 'public' ]);
 
         $video->save();
 

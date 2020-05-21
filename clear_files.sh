@@ -1,1 +1,1 @@
-rm -rf storage/app/videos
+rm -rf storage/app/public/*
