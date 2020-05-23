@@ -29,7 +29,7 @@ export function apiRequest(url,
     const data = {method, headers, body}
 
     // Perform the request to the server, convert to json and run the callback if it's set
-    fetch('/api' + url, data)
+    return fetch('/api' + url, data)
         .then(response => response.json().then(
             body => {
                 // Only run the callback if it isn't null

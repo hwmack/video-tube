@@ -109,3 +109,9 @@ Content-Type: application/json
 
 # Check verification
 GET http://localhost:8000/verified
+
+###
+
+GET http://localhost:8000/api/recommendations
+Accept: application/json
+Content-Type: application/json

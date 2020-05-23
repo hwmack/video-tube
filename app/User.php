@@ -2,6 +2,7 @@
 
 namespace App;
 
+use DateTimeInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -26,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'stripe_ref'
+        'password', 'remember_token', 'stripe_ref', 'followers', 'follows', 'notifications'
     ];
 
     /**
@@ -94,6 +95,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Comment');
     }
 
+    /**
+     * Return the number of followers this user has
+     */
+    public function followCount() {
+        return count($this->followers);
+    }
+
+    protected function serializeDate(DateTimeInterface $date) {
+        return $date->getTimestamp();
+    }
 
     /**
      * The validator for a valid User object

@@ -46,6 +46,7 @@ class Login extends React.Component {
                 store.dispatch({
                     type: LOGIN,
                     user: body.user,
+                    followCount: body.followCount,
                 })
 
                 // Route to a new page

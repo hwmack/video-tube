@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Video;
+use App\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -40,8 +41,13 @@ class UserController extends Controller
         $user->videos;
         $user->bookmarks;
 
+        $followed = $user->followers
+            ->contains('follower', $request->user()->id);
+
         return response()->json([
             'user' => $user,
+            'followed' => $followed,
+            'followCount' => $user->followCount(),
         ]);
     }
 
@@ -88,4 +94,35 @@ class UserController extends Controller
         ]);
     }
 
+    public function followUser(Request $request, $id) {
+        $followee = User::find($id);
+
+        if ($followee == null) {
+            return response()
+                ->json([
+                    'errors' => ['Could not find followee']
+                ])
+                ->setStatusCode(422);
+        }
+
+        Follow::firstOrCreate([
+            'follower' => $request->user()->id,
+            'followee' => $id,
+        ]);
+
+        return response()->json([
+            'message' => 'success',
+        ]);
+    }
+
+    public function unFollowUser(Request $request, $id) {
+        Follow::where([
+            'follower' => $request->user()->id,
+            'followee' => $id,
+        ])->delete();
+
+        return response()->json([
+            'message' => 'success',
+        ]);
+    }
 }

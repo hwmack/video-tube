@@ -39,15 +39,15 @@ Route::get('/user/{username?}', 'UserController@get')->name('getUser');
  */
 Route::put('/user', 'UserController@update')->name('updateDetails');
 
-//Route::post('/follow/{user_id}')->name('followUser');
-//Route::delete('/follow/{user_id}')->name('followUser');
+Route::post('/follow/{id}', 'UserController@followUser')->name('followUser');
+Route::delete('/follow/{id}', 'UserController@unFollowUser')->name('unFollowUser');
 
 /**
  * Routes related to video uploading and downloading
  */
 Route::post('/video', 'VideoController@create')->name('createVideo');
-Route::post('/video/{id}', 'VideoController@upload')->name('uploadVideo');
-//    Route::put('/video/{id}')->name('updateVideo');
+Route::put('/video/{id}', 'VideoController@update')->name('updateVideo');
+Route::delete('/video/{id}', 'VideoController@delete')->name('deleteVideo');
 //    Route::get('/video/info/{id}')->name('videoDetails');
 //    Route::get('/video/{id}')->name('downloadVideo');
 //
@@ -55,7 +55,7 @@ Route::post('/video/{id}', 'VideoController@upload')->name('uploadVideo');
 //    Route::delete('/bookmark/{video_id}')->name('rmBookmark');
 
 /*
- * This will probably be moved to websockets later
+ * TODO This will probably be moved to websockets later
  */
 //    Route::get('/comments/{video_id}')->name('getComments');
 //    Route::post('/comments/{video_id}')->name('createComment');
@@ -63,18 +63,8 @@ Route::post('/video/{id}', 'VideoController@upload')->name('uploadVideo');
 //    Route::post('/like/{object_id}', 'LikeController@like')->name('createLike');
 //    Route::delete('/like/{object_id}', 'LikeController@dislike')->name('createLike');
 
-/*
- * For debugging, allow a user to get more information about a cookie
- */
-Route::get('/debug', function(Request $request) {
-    return response()->json([
-        'message' => 'endpoint is working',
-        'cookie' => $request->cookie(),
-        'session' => $request->session(),
-        'user' => $request->user(),
-        'viaRemember' => Auth::viaRemember()
-    ]);
-});
+Route::get('/search/{query}', 'HomeController@search')->name('searchVideos');
+Route::get('/recommendations', 'HomeController@videos')->name('getRecommendations');
 
 Route::any('/', function (){
     return response()->json([

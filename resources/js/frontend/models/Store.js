@@ -11,6 +11,7 @@ import * as actions from './Actions'
 const seedState = {
     history: createBrowserHistory(),
     isUserAuthenticated: false,
+    userFollowCount: 0,
     displayVideoDialog: false,
 }
 
@@ -21,6 +22,7 @@ const reducer = (state = seedState, action) => {
             return {
                 ...state,
                 isUserAuthenticated: action.user,
+                userFollowCount: action.followCount,
             }
         case actions.LOGOUT:
             return {

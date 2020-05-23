@@ -95,8 +95,9 @@ export default class Register extends React.Component {
         apiRequest('/register', 'POST', body, (response, body) => {
             if (response.status === 200) {
                 store.dispatch({
-                    'type': REGISTER,
-                    'user': body.user
+                    type: REGISTER,
+                    user: body.user,
+                    followCount: body.followCount,
                 })
 
                 store.getState().history.push('/')

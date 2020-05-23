@@ -25,7 +25,8 @@ class LoginController extends Controller {
     public function authenticated(Request $request, $user) {
         return response()->json([
             'message' => 'Authenticated',
-            'user' => $request->user()
+            'user' => $request->user(),
+            'followCount' => $request->user()->followCount(),
         ]);
     }
 

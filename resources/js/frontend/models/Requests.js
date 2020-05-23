@@ -20,18 +20,17 @@ export function loginRequest(username, password, remember = false) {
         body.remember = true
     }
 
-    return callback => {
+    return callback =>
         apiRequest('/login', 'POST', body, callback)
-    }
+
 }
 
 /**
  * Build a request to be used for logging out
  */
 export function logoutRequest() {
-    return callback => {
+    return callback =>
         apiRequest('/logout', 'POST', callback)
-    }
 }
 
 /**
@@ -44,7 +43,36 @@ export function uploadVideoRequest(title, description, tags, video) {
     body.set('tags', tags)
     body.append('video', video)
 
-    return callback => {
-        apiRequest('/video', 'POST', body, callback)
-    }
+    return callback => apiRequest('/video', 'POST', body, callback)
+}
+
+/**
+ * Request to get recommendations for the home page
+ */
+export function getRecommendationsRequest(page = 1) {
+    const url = `/recommendations?page=${page}`
+    return callback => apiRequest(url, 'GET', null, callback)
+}
+
+/**
+ * Request for a search query
+ */
+export function getSearchVideosRequest(query, page = 1) {
+    const url = `/search/${query}?page=${page}`
+    return callback => apiRequest(url, 'GET', null, callback)
+}
+
+export function getUserRequest(username = null) {
+    const url = '/user' + (username == null ? '' : `/${username}`)
+    return callback => apiRequest(url, 'GET', null, callback)
+}
+
+export function getFollowRequest(id) {
+    return callback =>
+        apiRequest(`/follow/${id}`, 'POST', null, callback)
+}
+
+export function getUnfollowRequest(id) {
+    return callback =>
+        apiRequest(`/follow/${id}`, 'DELETE', null, callback)
 }

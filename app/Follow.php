@@ -6,5 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Follow extends Model
 {
-    protected $primaryKey = 'follow_id';
+    protected $fillable = [
+        'follower', 'followee',
+    ];
+
+    public function follower() {
+        return $this->hasOne('App\User', 'follower');
+    }
+
+    public function followee() {
+        return $this->hasOne('App\User', 'followee');
+    }
 }

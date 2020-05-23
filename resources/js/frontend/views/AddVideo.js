@@ -10,8 +10,6 @@ export default class AddVideo extends React.Component {
     constructor(props) {
         super(props)
 
-        console.log(store.getState())
-
         this.state = {
             title: '',
             description: '',
@@ -70,6 +68,12 @@ export default class AddVideo extends React.Component {
                     this.setState({
                         ...this.state,
                         error,
+                        uploading: false
+                    })
+                } else {
+                    this.setState({
+                        ...this.state,
+                        error: 'An unknown error ocurred',
                         uploading: false
                     })
                 }

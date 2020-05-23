@@ -88305,6 +88305,54 @@ function LoggedInPage(props) {
 
 /***/ }),
 
+/***/ "./resources/js/frontend/components/VideoTile.js":
+/*!*******************************************************!*\
+  !*** ./resources/js/frontend/components/VideoTile.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return VideoTile; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+
+
+
+function goTo(url) {
+  return function (event) {
+    return store.getState().history.push(url);
+  };
+}
+
+function VideoTile(props) {
+  if (props.empty) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], {
+      bg: "dark",
+      border: "dark"
+    });
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], {
+    bg: "dark",
+    border: "dark",
+    className: "video-tile",
+    onClick: goTo("/video/".concat(props.id))
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"].Img, {
+    variant: "top",
+    src: "https://via.placeholder.com/300x200",
+    height: "150px"
+  }), props.title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("small", {
+    className: "text-white-50"
+  }, "Created ", props.time));
+}
+
+/***/ }),
+
 /***/ "./resources/js/frontend/helpers/utils.js":
 /*!************************************************!*\
   !*** ./resources/js/frontend/helpers/utils.js ***!
@@ -88351,7 +88399,7 @@ function apiRequest(url, method) {
     body: body
   }; // Perform the request to the server, convert to json and run the callback if it's set
 
-  fetch('/api' + url, data).then(function (response) {
+  return fetch('/api' + url, data).then(function (response) {
     return response.json().then(function (body) {
       // Only run the callback if it isn't null
       if (callback != null) callback(response, body);
@@ -88402,7 +88450,7 @@ var VIDEO_DISPLAY = 'VIDEO_DISPLAY';
 /*!**************************************************!*\
   !*** ./resources/js/frontend/models/Requests.js ***!
   \**************************************************/
-/*! exports provided: loginRequest, logoutRequest, uploadVideoRequest */
+/*! exports provided: loginRequest, logoutRequest, uploadVideoRequest, getRecommendationsRequest, getSearchVideosRequest, getUserRequest, getFollowRequest, getUnfollowRequest */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -88410,6 +88458,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loginRequest", function() { return loginRequest; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logoutRequest", function() { return logoutRequest; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "uploadVideoRequest", function() { return uploadVideoRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRecommendationsRequest", function() { return getRecommendationsRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSearchVideosRequest", function() { return getSearchVideosRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserRequest", function() { return getUserRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFollowRequest", function() { return getFollowRequest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUnfollowRequest", function() { return getUnfollowRequest; });
 /* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/utils */ "./resources/js/frontend/helpers/utils.js");
 /**
  * Library of requests that can be used to retrieve data from the server
@@ -88434,7 +88487,7 @@ function loginRequest(username, password) {
   }
 
   return function (callback) {
-    Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/login', 'POST', body, callback);
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/login', 'POST', body, callback);
   };
 }
 /**
@@ -88443,7 +88496,7 @@ function loginRequest(username, password) {
 
 function logoutRequest() {
   return function (callback) {
-    Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/logout', 'POST', callback);
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/logout', 'POST', callback);
   };
 }
 /**
@@ -88457,7 +88510,46 @@ function uploadVideoRequest(title, description, tags, video) {
   body.set('tags', tags);
   body.append('video', video);
   return function (callback) {
-    Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/video', 'POST', body, callback);
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])('/video', 'POST', body, callback);
+  };
+}
+/**
+ * Request to get recommendations for the home page
+ */
+
+function getRecommendationsRequest() {
+  var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+  var url = "/recommendations?page=".concat(page);
+  return function (callback) {
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])(url, 'GET', null, callback);
+  };
+}
+/**
+ * Request for a search query
+ */
+
+function getSearchVideosRequest(query) {
+  var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var url = "/search/".concat(query, "?page=").concat(page);
+  return function (callback) {
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])(url, 'GET', null, callback);
+  };
+}
+function getUserRequest() {
+  var username = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  var url = '/user' + (username == null ? '' : "/".concat(username));
+  return function (callback) {
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])(url, 'GET', null, callback);
+  };
+}
+function getFollowRequest(id) {
+  return function (callback) {
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])("/follow/".concat(id), 'POST', null, callback);
+  };
+}
+function getUnfollowRequest(id) {
+  return function (callback) {
+    return Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_0__["apiRequest"])("/follow/".concat(id), 'DELETE', null, callback);
   };
 }
 
@@ -88493,6 +88585,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var seedState = {
   history: Object(history__WEBPACK_IMPORTED_MODULE_1__["createBrowserHistory"])(),
   isUserAuthenticated: false,
+  userFollowCount: 0,
   displayVideoDialog: false
 };
 
@@ -88504,7 +88597,8 @@ var reducer = function reducer() {
     case _Actions__WEBPACK_IMPORTED_MODULE_2__["LOGIN"]:
     case _Actions__WEBPACK_IMPORTED_MODULE_2__["REGISTER"]:
       return _objectSpread({}, state, {
-        isUserAuthenticated: action.user
+        isUserAuthenticated: action.user,
+        userFollowCount: action.followCount
       });
 
     case _Actions__WEBPACK_IMPORTED_MODULE_2__["LOGOUT"]:
@@ -88593,7 +88687,6 @@ var AddVideo = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, AddVideo);
 
     _this = _super.call(this, props);
-    console.log(_models_Store__WEBPACK_IMPORTED_MODULE_3__["store"].getState());
     _this.state = {
       title: '',
       description: '',
@@ -88646,6 +88739,11 @@ var AddVideo = /*#__PURE__*/function (_React$Component) {
 
           _this2.setState(_objectSpread({}, _this2.state, {
             error: error,
+            uploading: false
+          }));
+        } else {
+          _this2.setState(_objectSpread({}, _this2.state, {
+            error: 'An unknown error ocurred',
             uploading: false
           }));
         }
@@ -88859,7 +88957,8 @@ var App = /*#__PURE__*/function (_React$Component) {
           if (result.user) {
             _models_Store__WEBPACK_IMPORTED_MODULE_7__["store"].dispatch({
               type: _models_Actions__WEBPACK_IMPORTED_MODULE_6__["LOGIN"],
-              user: result.user
+              user: result.user,
+              followCount: result.followCount
             });
           }
 
@@ -88885,7 +88984,7 @@ var App = /*#__PURE__*/function (_React$Component) {
         history: _models_Store__WEBPACK_IMPORTED_MODULE_7__["store"].getState().history
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
         exact: true,
-        path: "/",
+        path: ['/', '/search/:query?'],
         title: "Home"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_LoggedInPage__WEBPACK_IMPORTED_MODULE_14__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Home__WEBPACK_IMPORTED_MODULE_8__["default"], null))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CustomRoute, {
         exact: true,
@@ -88994,7 +89093,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Home; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _components_VideoTile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/VideoTile */ "./resources/js/frontend/components/VideoTile.js");
+/* harmony import */ var _models_Requests__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../models/Requests */ "./resources/js/frontend/models/Requests.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -89018,6 +89126,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+
+
 var Home = /*#__PURE__*/function (_React$Component) {
   _inherits(Home, _React$Component);
 
@@ -89029,24 +89140,142 @@ var Home = /*#__PURE__*/function (_React$Component) {
     _classCallCheck(this, Home);
 
     _this = _super.call(this, props);
+    var query = props.match.params.query;
     _this.state = {
+      searchQuery: query === undefined ? '' : query,
+      loading: true,
+      bottom: false,
+      page: 1,
       videos: [] // List of videos to display
 
     };
-    /* Fetch some initial videos to display */
-
-    _this.fetchVideos();
-
     return _this;
   }
 
   _createClass(Home, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      /* Fetch some initial videos to display */
+      this.fetchVideos();
+      window.addEventListener('scroll', this.handleScrollEvent.bind(this));
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      // Unregister the scroll event
+      window.removeEventListener('scroll', this.handleScrollEvent.bind(this));
+    }
+  }, {
+    key: "handleScrollEvent",
+    value: function handleScrollEvent() {
+      if (!this.state.loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        this.fetchVideos();
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var _this2 = this;
+
+      var query = this.props.match.params.query;
+
+      if (query !== prevProps.match.params.query) {
+        // We need to update the state and get new videos
+        this.setState(_objectSpread({}, this.state, {
+          videos: [],
+          searchQuery: query === undefined ? '' : query,
+          page: 1
+        }), function () {
+          return _this2.fetchVideos();
+        });
+      }
+    }
+  }, {
     key: "fetchVideos",
-    value: function fetchVideos() {}
+    value: function fetchVideos() {
+      var _this3 = this;
+
+      this.setState(_objectSpread({}, this.state, {
+        loading: true
+      }));
+
+      var callback = function callback(response, body) {
+        if (body.data.length === 0) {
+          _this3.setState(_objectSpread({}, _this3.state, {
+            bottom: true
+          }));
+        } else {
+          _this3.setState(_objectSpread({}, _this3.state, {
+            videos: _this3.state.videos.concat(body.data),
+            page: _this3.state.page + 1,
+            // Increment the page
+            loading: false
+          }));
+        }
+      };
+
+      if (this.state.searchQuery === '') {
+        Object(_models_Requests__WEBPACK_IMPORTED_MODULE_3__["getRecommendationsRequest"])(this.state.page)(callback);
+      } else {
+        console.log('search query');
+        Object(_models_Requests__WEBPACK_IMPORTED_MODULE_3__["getSearchVideosRequest"])(this.state.searchQuery, this.state.page)(callback);
+      }
+    }
+  }, {
+    key: "renderVideos",
+    value: function renderVideos(videos) {
+      if (videos === undefined || videos.length === 0) {
+        return '';
+      }
+
+      var grid = [];
+
+      for (var i = 0; i < videos.length / 4; i++) {
+        var row = [];
+
+        for (var j = 0; j < 4; j++) {
+          var video = videos[4 * i + j];
+
+          if (video === undefined) {
+            row.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_VideoTile__WEBPACK_IMPORTED_MODULE_2__["default"], {
+              key: j,
+              empty: true
+            }));
+          } else {
+            row.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_VideoTile__WEBPACK_IMPORTED_MODULE_2__["default"], {
+              key: j,
+              id: video.id,
+              title: video.title,
+              time: video.created_at
+            }));
+          }
+        }
+
+        grid.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["CardDeck"], {
+          key: i
+        }, row));
+        grid.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", {
+          key: -1 * (i + 1)
+        })); // Make the key unique
+      }
+
+      return grid;
+    }
+  }, {
+    key: "renderLoader",
+    value: function renderLoader() {
+      var spinner = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Spinner"], {
+        animation: "border"
+      });
+      var bottom = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("b", null, "Reached the end");
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], {
+        className: "align-items-center justify-content-center"
+      }, this.state.bottom ? bottom : spinner);
+    }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("b", null, "Display all the videos here");
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, this.state.searchQuery !== '' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("h2", null, "Search: ", this.state.searchQuery) : '', this.renderVideos(this.state.videos), this.state.loading ? this.renderLoader() : null);
     }
   }]);
 
@@ -89159,7 +89388,8 @@ var Login = /*#__PURE__*/function (_React$Component) {
           // Logged in, go to home page
           _models_Store__WEBPACK_IMPORTED_MODULE_4__["store"].dispatch({
             type: _models_Actions__WEBPACK_IMPORTED_MODULE_7__["LOGIN"],
-            user: body.user
+            user: body.user,
+            followCount: body.followCount
           }); // Route to a new page
 
           if (_this2.state.redirect) {
@@ -89487,6 +89717,12 @@ function handleProfile() {
   _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].getState().history.push('/profile');
 }
 
+function handleSearch(e) {
+  e.preventDefault();
+  var query = encodeURIComponent(document.getElementById('search-field').value);
+  _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].getState().history.push("/search/".concat(query));
+}
+
 function resendVerificationEmail() {
   Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__["apiRequest"])('/email/resend', 'POST', null, function (_) {
     // TODO add toast to state instead of alert
@@ -89530,11 +89766,14 @@ function NavBar(props) {
     xs: 5,
     className: "d-flex justify-content-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
-    id: "search-box"
+    id: "search-box",
+    onSubmit: handleSearch
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+    id: "search-field",
     type: "text",
     placeholder: "Search"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["InputGroup"].Append, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    type: "submit",
     variant: "outline-primary"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_icons_go__WEBPACK_IMPORTED_MODULE_2__["GoSearch"], null)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], {
     className: "d-flex justify-content-end"
@@ -89572,7 +89811,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var _models_Store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../models/Store */ "./resources/js/frontend/models/Store.js");
 /* harmony import */ var _helpers_utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../helpers/utils */ "./resources/js/frontend/helpers/utils.js");
-/* harmony import */ var react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap/Alert */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var _models_Requests__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../models/Requests */ "./resources/js/frontend/models/Requests.js");
+/* harmony import */ var react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap/Alert */ "./node_modules/react-bootstrap/esm/Alert.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -89607,6 +89847,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var Profile = /*#__PURE__*/function (_React$Component) {
   _inherits(Profile, _React$Component);
 
@@ -89617,27 +89858,99 @@ var Profile = /*#__PURE__*/function (_React$Component) {
 
     _classCallCheck(this, Profile);
 
-    _this = _super.call(this, props);
+    _this = _super.call(this, props); // Set the initial state
 
-    if (props.match.params.username !== undefined) {
-      // TODO update so it can handle another users profile
-      alert('Unsupported profile page');
-      _models_Store__WEBPACK_IMPORTED_MODULE_2__["store"].getState().history.push('/');
-    }
-
-    var user = _models_Store__WEBPACK_IMPORTED_MODULE_2__["store"].getState().isUserAuthenticated;
     _this.state = {
-      user: user,
-      formUsername: new String(user.username),
-      formEmail: new String(user.email),
-      formPassword: '',
-      editable: false,
-      errors: ''
+      user: null,
+      ownProfile: false,
+      followed: false
     };
     return _this;
-  }
+  } // Once the component has been mounted, get the user
+
 
   _createClass(Profile, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.updateUser();
+    } // If the url has changed, update the state to the new user
+
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      // Update if the props have changed
+      if (this.props.match.params.username !== prevProps.match.params.username) {
+        this.updateUser();
+      }
+    } // Get the state of the user
+
+  }, {
+    key: "updateUser",
+    value: function updateUser() {
+      var _this2 = this;
+
+      var user = _models_Store__WEBPACK_IMPORTED_MODULE_2__["store"].getState().isUserAuthenticated;
+
+      if (this.props.match.params.username !== undefined) {
+        /* Get the new user */
+        Object(_models_Requests__WEBPACK_IMPORTED_MODULE_4__["getUserRequest"])(this.props.match.params.username)(function (response, body) {
+          if (body.user !== undefined) {
+            _this2.setState(_objectSpread({}, _this2.state, {
+              user: body.user,
+              followed: body.followed,
+              followCount: body.followCount
+            }));
+          } else {// No user exists
+          }
+        });
+      } else {
+        this.setState(_objectSpread({}, this.state, {
+          user: user,
+          ownProfile: true,
+          followCount: _models_Store__WEBPACK_IMPORTED_MODULE_2__["store"].getState().userFollowCount,
+
+          /* State below is only for their own profile */
+          formUsername: new String(user.username),
+          // Copy the user's details
+          formEmail: new String(user.email),
+          formPassword: '',
+          editable: false,
+          errors: ''
+        }));
+      }
+    } // Handle when the follow user button was pressed
+
+  }, {
+    key: "handleFollowUser",
+    value: function handleFollowUser() {
+      var _this3 = this;
+
+      if (this.state.followed) {
+        Object(_models_Requests__WEBPACK_IMPORTED_MODULE_4__["getUnfollowRequest"])(this.state.user.id)(function (request, body) {
+          if (request.status == 200) {
+            _this3.setState(_objectSpread({}, _this3.state, {
+              followed: false,
+              followCount: _this3.state.followCount - 1
+            }));
+          } else {
+            console.error("Error unfollowing user");
+          }
+        });
+      } else {
+        Object(_models_Requests__WEBPACK_IMPORTED_MODULE_4__["getFollowRequest"])(this.state.user.id)(function (request, body) {
+          if (request.status == 200) {
+            _this3.setState(_objectSpread({}, _this3.state, {
+              followed: true,
+              followCount: _this3.state.followCount + 1
+            }));
+          } else {
+            console.error("Error following user");
+          }
+        });
+      }
+    } // Handle input updates to the form
+
+  }, {
     key: "handleUpdate",
     value: function handleUpdate(event) {
       switch (event.target.id) {
@@ -89659,11 +89972,12 @@ var Profile = /*#__PURE__*/function (_React$Component) {
           }));
           break;
       }
-    }
+    } // Send a request to update the users details
+
   }, {
     key: "updateUserDetails",
     value: function updateUserDetails(event) {
-      var _this2 = this;
+      var _this4 = this;
 
       event.preventDefault(); // Send a request to the server
 
@@ -89684,12 +89998,12 @@ var Profile = /*#__PURE__*/function (_React$Component) {
       Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_3__["apiRequest"])('/user', 'PUT', body, function (response, body) {
         // Check if it was a success
         if (response.status === 200) {
-          _this2.setState(_objectSpread({}, _this2.state, {
+          _this4.setState(_objectSpread({}, _this4.state, {
             user: body.user,
             errors: ''
           }));
 
-          _this2.toggleEditable();
+          _this4.toggleEditable();
 
           _models_Store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch({
             type: 'LOGIN',
@@ -89707,13 +90021,14 @@ var Profile = /*#__PURE__*/function (_React$Component) {
               error = body.errors.password[0];
             }
 
-            _this2.setState(_objectSpread({}, _this2.state, {
+            _this4.setState(_objectSpread({}, _this4.state, {
               errors: error
             }));
           }
         }
       });
-    }
+    } // Toggle the forms editable state
+
   }, {
     key: "toggleEditable",
     value: function toggleEditable() {
@@ -89730,66 +90045,83 @@ var Profile = /*#__PURE__*/function (_React$Component) {
           formPassword: ''
         }));
       }
-    }
+    } // Display the form allowing the user to update their details
+
   }, {
     key: "currentUserForm",
     value: function currentUserForm() {
-      if (this.props.username === undefined) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
-          onSubmit: this.updateUserDetails.bind(this),
-          style: {
-            marginBottom: '50px'
-          }
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          variant: "danger",
-          className: this.state.errors === '' ? 'd-none' : 'd-block'
-        }, this.state.errors), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
-          as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
-          controlId: "formEmail"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
-          column: true,
-          sm: "2"
-        }, "Email: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-          type: "email",
-          plaintext: !this.state.editable,
-          readOnly: !this.state.editable,
-          value: this.state.formEmail,
-          onChange: this.handleUpdate.bind(this)
-        }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
-          as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
-          controlId: "formUsername"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
-          column: true,
-          sm: "2"
-        }, "Username: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-          type: "text",
-          plaintext: !this.state.editable,
-          readOnly: !this.state.editable,
-          value: this.state.formUsername,
-          onChange: this.handleUpdate.bind(this)
-        }))), !this.state.editable ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
-          as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
-          controlId: "formPassword"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
-          column: true,
-          sm: "2"
-        }, "Password: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
-          type: "password",
-          value: this.state.formPassword,
-          onChange: this.handleUpdate.bind(this)
-        }))), !this.state.editable ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-          onClick: this.toggleEditable.bind(this)
-        }, "Edit Details") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-          type: "submit"
-        }, "Save"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-          onClick: this.toggleEditable.bind(this)
-        }, "Cancel")));
-      }
-    }
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+        onSubmit: this.updateUserDetails.bind(this),
+        style: {
+          marginBottom: '50px'
+        }
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap_Alert__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        variant: "danger",
+        className: this.state.errors === '' ? 'd-none' : 'd-block'
+      }, this.state.errors), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
+        controlId: "formEmail"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
+        column: true,
+        sm: "2"
+      }, "Email: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "email",
+        plaintext: !this.state.editable,
+        readOnly: !this.state.editable,
+        value: this.state.formEmail,
+        onChange: this.handleUpdate.bind(this)
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
+        controlId: "formUsername"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
+        column: true,
+        sm: "2"
+      }, "Username: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "text",
+        plaintext: !this.state.editable,
+        readOnly: !this.state.editable,
+        value: this.state.formUsername,
+        onChange: this.handleUpdate.bind(this)
+      }))), !this.state.editable ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Group, {
+        as: react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"],
+        controlId: "formPassword"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Label, {
+        column: true,
+        sm: "2"
+      }, "Password: "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+        type: "password",
+        value: this.state.formPassword,
+        onChange: this.handleUpdate.bind(this)
+      }))), !this.state.editable ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        onClick: this.toggleEditable.bind(this)
+      }, "Edit Details") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        type: "submit"
+      }, "Save"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        onClick: this.toggleEditable.bind(this)
+      }, "Cancel")));
+    } // Show the bookmark button if on another users profile
+
+  }, {
+    key: "showBookmarkButton",
+    value: function showBookmarkButton() {
+      // TODO somehow know if the user has been bookmarked
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+        onClick: this.handleFollowUser.bind(this)
+      }, this.state.followed ? 'Unfollow' : 'Follow'));
+    } // Display the profile once its loaded
+
+  }, {
+    key: "showProfile",
+    value: function showProfile() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], {
+        lg: 10
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.user.username, "'s Profile (", this.state.followCount, ")")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, !this.state.ownProfile ? this.showBookmarkButton() : null)), this.state.ownProfile ? this.currentUserForm() : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Bookmarked Videos"), "Display liked videos here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "User's Uploaded Videos"), "Display the users uploaded videos")));
+    } // Main render method for component
+
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.state.user.username, "'s Profile"), this.currentUserForm(), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Row"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Bookmarked Videos")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Col"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "User's Uploaded Videos"))));
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.user !== null ? this.showProfile() : 'Loading..');
     }
   }]);
 
@@ -89945,8 +90277,9 @@ var Register = /*#__PURE__*/function (_React$Component) {
       Object(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__["apiRequest"])('/register', 'POST', body, function (response, body) {
         if (response.status === 200) {
           _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].dispatch({
-            'type': _models_Actions__WEBPACK_IMPORTED_MODULE_6__["REGISTER"],
-            'user': body.user
+            type: _models_Actions__WEBPACK_IMPORTED_MODULE_6__["REGISTER"],
+            user: body.user,
+            followCount: body.followCount
           });
           _models_Store__WEBPACK_IMPORTED_MODULE_5__["store"].getState().history.push('/');
         } else if (response.status === 422) {

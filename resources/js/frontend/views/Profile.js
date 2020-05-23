@@ -3,31 +3,99 @@ import { Form, Row, Col, Button } from "react-bootstrap"
 
 import { store } from '../models/Store'
 import { apiRequest } from "../helpers/utils";
+import { getUserRequest, getUnfollowRequest, getFollowRequest } from '../models/Requests'
 import Alert from "react-bootstrap/Alert";
 
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
 
-        if (props.match.params.username !== undefined) {
-            // TODO update so it can handle another users profile
-            alert('Unsupported profile page')
-            store.getState().history.push('/')
-        }
-
-        let user = store.getState().isUserAuthenticated
-
+        // Set the initial state
         this.state = {
-            user,
-            formUsername: new String(user.username),
-            formEmail: new String(user.email),
-            formPassword: '',
-            editable: false,
-            errors: ''
+            user: null,
+            ownProfile: false,
+            followed: false,
         }
-
     }
 
+    // Once the component has been mounted, get the user
+    componentDidMount() {
+        this.updateUser()
+    }
+
+    // If the url has changed, update the state to the new user
+    componentDidUpdate(prevProps) {
+        // Update if the props have changed
+        if (this.props.match.params.username !== prevProps.match.params.username) {
+            this.updateUser()
+        }
+    }
+
+    // Get the state of the user
+    updateUser() {
+        const user = store.getState().isUserAuthenticated
+
+        if (this.props.match.params.username !== undefined) {
+            /* Get the new user */
+            getUserRequest(this.props.match.params.username)((response, body) => {
+                if (body.user !== undefined) {
+                    this.setState({
+                        ...this.state,
+                        user: body.user,
+                        followed: body.followed,
+                        followCount: body.followCount,
+                    })
+                } else {
+                    // No user exists
+                }
+            })
+        } else {
+            this.setState({
+                ...this.state,
+                user,
+                ownProfile: true,
+                followCount: store.getState().userFollowCount,
+
+                /* State below is only for their own profile */
+                formUsername: new String(user.username), // Copy the user's details
+                formEmail: new String(user.email),
+                formPassword: '',
+                editable: false,
+                errors: ''
+            })
+        }
+    }
+
+    // Handle when the follow user button was pressed
+    handleFollowUser() {
+        if (this.state.followed) {
+            getUnfollowRequest(this.state.user.id)((request, body) => {
+                if (request.status == 200) {
+                    this.setState({
+                        ...this.state,
+                        followed: false,
+                        followCount: this.state.followCount - 1,
+                    })
+                } else {
+                    console.error("Error unfollowing user");
+                }
+            });
+        } else {
+            getFollowRequest(this.state.user.id)((request, body) => {
+                if (request.status == 200) {
+                    this.setState({
+                        ...this.state,
+                        followed: true,
+                        followCount: this.state.followCount + 1,
+                    })
+                } else {
+                    console.error("Error following user");
+                }
+            });
+        }
+    }
+
+    // Handle input updates to the form
     handleUpdate(event) {
         switch (event.target.id) {
             case 'formEmail':
@@ -51,6 +119,7 @@ export default class Profile extends React.Component {
         }
     }
 
+    // Send a request to update the users details
     updateUserDetails(event) {
         event.preventDefault()
 
@@ -104,6 +173,7 @@ export default class Profile extends React.Component {
         })
     }
 
+    // Toggle the forms editable state
     toggleEditable() {
         if (this.state.editable === false) {
             this.setState({
@@ -122,81 +192,114 @@ export default class Profile extends React.Component {
         }
     }
 
+    // Display the form allowing the user to update their details
     currentUserForm() {
-        if (this.props.username === undefined) {
-            return (
-                <Form onSubmit={this.updateUserDetails.bind(this)} style={{marginBottom: '50px'}}>
-                    <Alert variant='danger' className={this.state.errors === '' ? 'd-none' : 'd-block'}>
-                        {this.state.errors}
-                    </Alert>
-                    <Form.Group as={Row} controlId='formEmail'>
-                        <Form.Label column sm="2">Email: </Form.Label>
+        return (
+            <Form onSubmit={this.updateUserDetails.bind(this)} style={{marginBottom: '50px'}}>
+                <Alert variant='danger' className={this.state.errors === '' ? 'd-none' : 'd-block'}>
+                    {this.state.errors}
+                </Alert>
+                <Form.Group as={Row} controlId='formEmail'>
+                    <Form.Label column sm="2">Email: </Form.Label>
+                    <Col>
+                        <Form.Control type='email'
+                                      plaintext={!this.state.editable}
+                                      readOnly={!this.state.editable}
+                                      value={this.state.formEmail}
+                                      onChange={this.handleUpdate.bind(this)}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId='formUsername'>
+                    <Form.Label column sm='2'>Username: </Form.Label>
+                    <Col>
+                        <Form.Control type='text'
+                                      plaintext={!this.state.editable}
+                                      readOnly={!this.state.editable}
+                                      value={this.state.formUsername}
+                                      onChange={this.handleUpdate.bind(this)}/>
+                    </Col>
+                </Form.Group>
+
+                {/* TODO Eventually allow updating password */}
+                {!this.state.editable ? null : (
+                    <Form.Group as={Row} controlId='formPassword'>
+                        <Form.Label column sm="2">Password: </Form.Label>
                         <Col>
-                            <Form.Control type='email'
-                                          plaintext={!this.state.editable}
-                                          readOnly={!this.state.editable}
-                                          value={this.state.formEmail}
+                            <Form.Control type='password'
+                                          value={this.state.formPassword}
                                           onChange={this.handleUpdate.bind(this)}/>
                         </Col>
                     </Form.Group>
+                )}
 
-                    <Form.Group as={Row} controlId='formUsername'>
-                        <Form.Label column sm='2'>Username: </Form.Label>
-                        <Col>
-                            <Form.Control type='text'
-                                          plaintext={!this.state.editable}
-                                          readOnly={!this.state.editable}
-                                          value={this.state.formUsername}
-                                          onChange={this.handleUpdate.bind(this)}/>
-                        </Col>
-                    </Form.Group>
-
-                    {/* TODO Eventually allow updating password */}
-                    {!this.state.editable ? null : (
-                        <Form.Group as={Row} controlId='formPassword'>
-                            <Form.Label column sm="2">Password: </Form.Label>
-                            <Col>
-                                <Form.Control type='password'
-                                              value={this.state.formPassword}
-                                              onChange={this.handleUpdate.bind(this)}/>
-                            </Col>
-                        </Form.Group>
-                    )}
-
-                    {!this.state.editable ? (
-                        <Button onClick={this.toggleEditable.bind(this)}>
-                            Edit Details
-                        </Button>) : (
-                        <>
-                        <Button type='submit'>
-                            Save
-                        </Button>{' '}
-                        <Button onClick={this.toggleEditable.bind(this)}>
-                            Cancel
-                        </Button>
-                        </>
-                        )
-                    }
-                </Form>
-            )
-        }
+                {!this.state.editable ? (
+                    <Button onClick={this.toggleEditable.bind(this)}>
+                        Edit Details
+                    </Button>) : (
+                    <>
+                    <Button type='submit'>
+                        Save
+                    </Button>{' '}
+                    <Button onClick={this.toggleEditable.bind(this)}>
+                        Cancel
+                    </Button>
+                    </>
+                    )
+                }
+            </Form>
+        )
     }
 
-    render() {
+    // Show the bookmark button if on another users profile
+    showBookmarkButton() {
+        // TODO somehow know if the user has been bookmarked
         return (
             <>
-                <h1>{this.state.user.username}'s Profile</h1>
+                <Button
+                    onClick={this.handleFollowUser.bind(this)}>
+                    {this.state.followed ? 'Unfollow' : 'Follow'}
+                </Button>
+            </>
+        )
+    }
 
-                {this.currentUserForm()}
+    // Display the profile once its loaded
+    showProfile() {
+        return (
+            <>
+                <Row>
+                    <Col lg={10}>
+                        <h1>{this.state.user.username}'s Profile ({this.state.followCount})</h1>
+                    </Col>
+                    <Col>
+                        {!this.state.ownProfile ? this.showBookmarkButton() : null}
+                    </Col>
+                </Row>
+
+                {this.state.ownProfile ? this.currentUserForm() : null}
+
+                <hr/>
 
                 <Row>
                     <Col>
                         <h3>Bookmarked Videos</h3>
+                        Display liked videos here
                     </Col>
                     <Col>
                         <h3>User's Uploaded Videos</h3>
+                        Display the users uploaded videos
                     </Col>
                 </Row>
+            </>
+        )
+    }
+
+    // Main render method for component
+    render() {
+        return (
+            <>
+                {this.state.user !== null ? this.showProfile() : 'Loading..'}
             </>
         )
     }

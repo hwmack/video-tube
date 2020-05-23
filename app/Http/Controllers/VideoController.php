@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Video;
+use App\Tag;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,7 @@ class VideoController extends Controller
 
         $video->save();
 
-        // FIXME Create and reference tags
+        $this->createTags($request->input('tags'), $video);
 
         return response()->json([
             'message' => 'success',
@@ -49,24 +50,65 @@ class VideoController extends Controller
         ]);
     }
 
-    public function upload(Request $request, $id)
-    {
-        // FIXME Must have a video file and an id
-
-        $video = Video::find($id);
-
-        dd($video);
-
-        return response()->json([
-            'message' => 'success'
-        ]);
-    }
-
     /**
      * User must be owner of the video to update
      */
-    public function edit(Request $request)
-    {
+    public function update(Request $request, $id) {
 
+        $video = Video::find($id);
+
+        if ($video->owner != $request->user()->id) {
+            return response()
+                ->json([
+                    'errors' => ['Unauthorised']
+                ])
+                ->setStatusCode(401);
+        }
+
+        if ($request->filled('title')) {
+            $video->title = $request->input('title');
+        }
+
+        if ($request->filled('description')) {
+            $video->description = $request->input('description');
+        }
+
+        if ($request->filled('tags')) {
+            createTags($request->input('tags'));
+        }
+
+        $video->save();
+
+        return response()
+            ->json(['message' => 'Success']);
+    }
+
+    /**
+     * Owner of the video may also delete it
+     */
+    public function delete(Request $request, $id) {
+        $video = Video::find($id);
+
+        if ($video->owner != $request->user()->id) {
+            return response()
+                ->json([
+                    'errors' => ['Unauthorised']
+                ])
+                ->setStatusCode(401);
+        }
+
+        $video->delete();
+
+        return response()
+            ->json(['message' => 'Success']);
+    }
+
+    private function createTags($tagString, $video) {
+        // Create and set tags
+        $tags = explode(',', $tagString);
+        foreach ($tags as $tag) {
+            $tag = Tag::firstOrCreate(['name' => trim($tag)]);
+            $video->tags()->save($tag);
+        }
     }
 }

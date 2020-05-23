@@ -43,6 +43,7 @@ export default class App extends React.Component {
                     store.dispatch({
                         type: LOGIN,
                         user: result.user,
+                        followCount: result.followCount,
                     })
                 }
 
@@ -64,7 +65,7 @@ export default class App extends React.Component {
                 {!this.state.isLoading ? (
                     <Router history={store.getState().history}>
                         <Switch>
-                            <CustomRoute exact path='/' title='Home'>
+                            <CustomRoute exact path={['/', '/search/:query?']} title='Home'>
                                 <LoggedInPage>
                                     <Home/>
                                 </LoggedInPage>

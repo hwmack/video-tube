@@ -37,6 +37,12 @@ function handleProfile() {
     store.getState().history.push('/profile')
 }
 
+function handleSearch(e) {
+    e.preventDefault()
+    const query = encodeURIComponent(document.getElementById('search-field').value)
+    store.getState().history.push(`/search/${query}`)
+}
+
 function resendVerificationEmail() {
     apiRequest('/email/resend', 'POST', null, _ => {
         // TODO add toast to state instead of alert
@@ -86,11 +92,11 @@ export default function NavBar(props) {
                     </Link>
                 </Col>
                 <Col xs={5} className='d-flex justify-content-center'>
-                    <Form id='search-box'>
+                    <Form id='search-box' onSubmit={handleSearch}>
                         <InputGroup>
-                            <Form.Control type='text' placeholder="Search"/>
+                            <Form.Control id='search-field' type='text' placeholder="Search"/>
                             <InputGroup.Append>
-                                <Button variant="outline-primary"><GoSearch/></Button>
+                                <Button type='submit' variant="outline-primary"><GoSearch/></Button>
                             </InputGroup.Append>
                         </InputGroup>
                     </Form>

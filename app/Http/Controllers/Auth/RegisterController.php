@@ -29,6 +29,7 @@ class RegisterController extends Controller {
         return response()->json([
             'message' => 'Successfully registered user',
             'user' => $user,
+            'followCount' => $user->followCount(),
         ]);
     }
 

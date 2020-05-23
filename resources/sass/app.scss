@@ -27,3 +27,14 @@
 #search-box {
   width: 100%;
 }
+
+.video-tile {
+  padding: 5px !important;
+}
+
+.video-tile:hover {
+  padding: 5px !important;
+  color: #f48024 !important; /* Was the only way to override bootstrap */
+  background: #495057 !important;
+  cursor: pointer;
+}
