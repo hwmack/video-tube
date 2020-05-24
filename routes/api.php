@@ -50,8 +50,8 @@ Route::put('/video/{id}', 'VideoController@update')->name('updateVideo');
 Route::delete('/video/{id}', 'VideoController@delete')->name('deleteVideo');
 Route::get('/video/{id}', 'VideoController@get')->name('videoDetails');
 
-//    Route::post('/bookmark/{video_id}')->name('addBookmark');
-//    Route::delete('/bookmark/{video_id}')->name('rmBookmark');
+Route::post('/bookmark/{id}', 'BookmarkController@addBookmark')->name('addBookmark');
+Route::delete('/bookmark/{id}', 'BookmarkController@removeBookmark')->name('rmBookmark');
 
 /*
  * TODO This will probably be moved to websockets later

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Row, Col, Badge, Container, Form, Button, Spinner } from 'react-bootstrap'
-import { GoPlus } from 'react-icons/go'
+import { Row, Col, Badge, OverlayTrigger, Tooltip, Form, Button, Spinner } from 'react-bootstrap'
+import { GoPlus, GoCheck } from 'react-icons/go'
 import { Link } from 'react-router-dom'
-import { getVideoRequest } from '../models/Requests'
+import { getBookmarkRequest, getVideoRequest } from '../models/Requests'
 
 export default class Video extends React.Component {
     constructor(props) {
@@ -84,6 +84,33 @@ export default class Video extends React.Component {
         })
     }
 
+    sendBookmarkRequest() {
+        getBookmarkRequest(this.state.video_id, !this.state.bookmarked)((response, body) => {
+            if (response.status === 200) {
+                this.setState({
+                    ...this.state,
+                    bookmarked: !this.state.bookmarked
+                })
+            } else {
+                console.log('Error handling bookmark')
+            }
+        })
+    }
+
+    bookmarkButton() {
+        return (
+            <OverlayTrigger placement='right' overlay={(
+                <Tooltip id='tooltip'>
+                    {(this.state.bookmarked) ? 'Bookmarked Video' : 'Bookmark'}
+                </Tooltip>
+            )}>
+                <Button onClick={this.sendBookmarkRequest.bind(this)} className='mx-2'>
+                    {this.state.bookmarked ? <GoCheck/> : <GoPlus/>}
+                </Button>
+            </OverlayTrigger>
+        )
+    }
+
     render() {
         if (this.state.loading) {
             return (
@@ -127,15 +154,15 @@ export default class Video extends React.Component {
                                     </Link>,
                                     {' ' + this.state.created}
                                 </small>
-                                <p>
+                                <div>
                                     {this.state.description}
-                                </p>
+                                </div>
                             </Col>
 
                             <Col lg={3}>
                                 <Row className='d-flex justify-content-end align-items-center'>
                                     <b>{this.state.views} views</b>
-                                    <Button className='mx-2'><GoPlus/></Button>
+                                    {this.bookmarkButton()}
                                 </Row>
                                 <br/>
                                 <Row
@@ -148,7 +175,7 @@ export default class Video extends React.Component {
                         </Row>
                     </Col>
                     <Col lg={3}>
-
+                        {/* Not sure what will go here */}
                     </Col>
                 </Row>
             </>

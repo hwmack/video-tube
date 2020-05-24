@@ -36,35 +36,37 @@ export default class Profile extends React.Component {
     updateUser() {
         const user = store.getState().isUserAuthenticated
 
-        if (this.props.match.params.username !== undefined) {
-            /* Get the new user */
-            getUserRequest(this.props.match.params.username)((response, body) => {
-                if (body.user !== undefined) {
-                    this.setState({
-                        ...this.state,
-                        user: body.user,
-                        followed: body.followed,
-                        followCount: body.followCount,
-                    })
-                } else {
-                    // No user exists
-                }
-            })
-        } else {
-            this.setState({
-                ...this.state,
-                user,
-                ownProfile: true,
-                followCount: store.getState().userFollowCount,
+        const callback = () => {
+            if (this.props.match.params.username === undefined) {
+                this.setState({
+                    ...this.state,
+                    ownProfile: true,
 
-                /* State below is only for their own profile */
-                formUsername: new String(user.username), // Copy the user's details
-                formEmail: new String(user.email),
-                formPassword: '',
-                editable: false,
-                errors: ''
-            })
+                    /* State below is only for their own profile */
+                    formUsername: new String(user.username), // Copy the user's details
+                    formEmail: new String(user.email),
+                    formPassword: '',
+                    editable: false,
+                    errors: ''
+                })
+            }
         }
+
+        /* Get the user details */
+        const username = (this.props.match.params.username === undefined)
+            ? user.username : this.props.match.params.username
+        getUserRequest(username)((response, body) => {
+            if (body.user !== undefined) {
+                this.setState({
+                    ...this.state,
+                    user: body.user,
+                    followed: body.followed,
+                    followCount: body.followCount,
+                }, callback)
+            } else {
+                // No user exists
+            }
+        })
     }
 
     // Handle when the follow user button was pressed

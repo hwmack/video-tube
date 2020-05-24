@@ -10,6 +10,8 @@ import {
     Form,
     Button,
     InputGroup,
+    OverlayTrigger,
+    Tooltip
 } from 'react-bootstrap'
 import { GoSearch, GoPlus } from 'react-icons/go';
 import { Link } from 'react-router-dom'
@@ -104,7 +106,13 @@ export default function NavBar(props) {
                     </Form>
                 </Col>
                 <Col className='d-flex justify-content-end'>
-                    <Button onClick={handleAddVideo}><GoPlus/></Button>
+                    <OverlayTrigger placement='bottom' overlay={(
+                        <Tooltip id='tooltip'>
+                            Upload Video
+                        </Tooltip>
+                    )}>
+                        <Button onClick={handleAddVideo}><GoPlus/></Button>
+                    </OverlayTrigger>
                     <Dropdown as={NavItem} id='nav-dropdown'>
                         <Dropdown.Toggle as={NavLink}/>
                         <Dropdown.Menu flip alignRight>

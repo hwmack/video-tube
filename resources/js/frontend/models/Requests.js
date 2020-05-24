@@ -85,3 +85,9 @@ export function getUnfollowRequest(id) {
     return callback =>
         apiRequest(`/follow/${id}`, 'DELETE', null, callback)
 }
+
+export function getBookmarkRequest(id, add = true) {
+    const method = add ? 'POST' : 'DELETE'
+    return callback =>
+        apiRequest(`/bookmark/${id}`, method, null, callback)
+}
