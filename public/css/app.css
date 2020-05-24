@@ -10915,3 +10915,11 @@ a.text-dark:focus {
   cursor: pointer;
 }
 
+.tag-item {
+  color: white;
+}
+
+.tag-item:hover {
+  text-decoration: none;
+}
+

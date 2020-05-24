@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\UserController;
 use App\Mail\VerifyEmail;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -28,7 +29,7 @@ class RegisterController extends Controller {
         // Send the response here
         return response()->json([
             'message' => 'Successfully registered user',
-            'user' => $user,
+            'user' => UserController::getUserResponse($request->user()),
             'followCount' => $user->followCount(),
         ]);
     }

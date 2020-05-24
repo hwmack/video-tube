@@ -47,6 +47,15 @@ export function uploadVideoRequest(title, description, tags, video) {
 }
 
 /**
+ * Return all the details needed for the video page
+ *
+ * @param id of the video
+ */
+export function getVideoRequest(id) {
+    return callback => apiRequest(`/video/${id}`, 'GET', null, callback)
+}
+
+/**
  * Request to get recommendations for the home page
  */
 export function getRecommendationsRequest(page = 1) {

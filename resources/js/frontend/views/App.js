@@ -83,7 +83,7 @@ export default class App extends React.Component {
                             </CustomRoute>
 
                             <CustomRoute title='Video' path='/video/:id'>
-                                <LoggedInPage>
+                                <LoggedInPage withContainer={true}>
                                     <Video/>
                                 </LoggedInPage>
                             </CustomRoute>

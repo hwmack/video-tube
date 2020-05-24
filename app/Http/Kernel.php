@@ -42,7 +42,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
-            'throttle:60,1',
+//            'throttle:60,1', // Remove this for now, it just causes more problems for testing and demoing
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];

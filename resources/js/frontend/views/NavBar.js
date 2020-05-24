@@ -40,6 +40,8 @@ function handleProfile() {
 function handleSearch(e) {
     e.preventDefault()
     const query = encodeURIComponent(document.getElementById('search-field').value)
+    document.getElementById('search-field').value = ''
+    document.getElementById('search-field').blur()
     store.getState().history.push(`/search/${query}`)
 }
 
@@ -77,7 +79,7 @@ export default function NavBar(props) {
 
     return (
         <>
-            <Navbar bg='light' variant='light'>
+            <Navbar bg='light' variant='light' className='sticky-top'>
                 <Col>
                     <Link to='/'>
                         <Navbar.Brand>

@@ -12,11 +12,27 @@ use FFMpeg;
 
 class Video extends Model
 {
+    public function hasBeenBookmarked($user) {
+        $bookmark = Bookmark::where([
+            'user_id' => $user->id,
+            'video_id' => $this->id,
+        ])->first();
+
+        $this->bookmarked = $bookmark != null;
+    }
+
     /*
      * A video has an owner
      */
-    public function owner() {
-        return $this->belongsTo('App/User');
+    public function user() {
+        return $this->hasOne('App\User', 'id', 'owner');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments() {
+        return $this->hasMany('App\Comment');
     }
 
     /**

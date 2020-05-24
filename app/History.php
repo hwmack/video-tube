@@ -8,5 +8,17 @@ class History extends Model
 {
     protected $table = 'history';
 
-    protected $primaryKey = 'history_id';
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'user_id', 'video_id'
+    ];
+
+    protected function user() {
+        return $this->hasOne('App\User');
+    }
+
+    protected function video() {
+        return $this->hasOne('App\Video');
+    }
 }

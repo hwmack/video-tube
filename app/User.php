@@ -67,6 +67,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Bookmark');
     }
 
+    public function bookmarkedVideos() {
+        $bookmarkedVideos = [];
+        foreach ($this->bookmarks as $bookmark) {
+            $bookmarkedVideos[] = $bookmark->video;
+        }
+        $this->bookmarkedVideos = $bookmarkedVideos;
+    }
+
     /**
      * A User can follow many other users
      */

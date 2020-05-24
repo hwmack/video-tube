@@ -28,9 +28,24 @@ class HomeController extends Controller
      * Perform a search over users and videos and return a list
      */
     public function search(Request $request, $query) {
-        // TODO Add a where clause for the owners username
-        return Video::where('title', 'ILIKE', "%$query%")
+        // Join all the tables we'll need
+        return Video::join('tag_video', 'tag_video.video_id', '=', 'videos.id')
+            ->join('tags', 'tags.id', '=', 'tag_video.tag_id')
+            ->join('users', 'users.id', '=', 'videos.owner')
+
+            // Make sure we retain the video id as the main id
+            ->select('*', 'videos.id as id')
+
+            // Check if the title, description, tag name or username matches
+            ->where('title', 'ILIKE', "%$query%")
             ->orWhere('description', 'ILIKE', "%$query%")
+            ->orWhere('name', 'ILIKE', "%$query%")
+            ->orWhere('username', 'ILIKE', "%$query%")
+
+            // Remove any duplicates
+            ->distinct('videos.id')
+
+            // Add pagination
             ->paginate(15);
     }
 
@@ -43,7 +58,8 @@ class HomeController extends Controller
         // TODO Use the user's most recently watched videos, to find more videos they'll like
 
         // For now we will just return a random series of videos
-        return Video::inRandomOrder()
-            ->paginate(15);
+        $videos =  Video::paginate(15);
+
+        return $videos;
     }
 }

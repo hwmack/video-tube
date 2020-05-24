@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\History;
 use App\Video;
 use App\Tag;
 use Illuminate\Support\Facades\Validator;
@@ -15,10 +16,37 @@ class VideoController extends Controller
     }
 
     /**
+     * Get all the information needed to display the video page
+     */
+    public function get(Request $request, $id) {
+        $video = Video::find($id);
+
+        // Update the video count
+        $video->timestamps = false;
+        $video->watch_count = $video->watch_count + 1;
+        $video->save();
+        $video->timestamps = true;
+
+        // Add an item to the history table (This will be used for recommendations)
+        History::firstOrCreate([
+            'user_id' => $request->user()->id,
+            'video_id' => $video->id,
+        ]);
+
+        // Get these details from the model
+        $video->tags;
+        $video->user;
+        $video->comments;
+
+        $video->hasBeenBookmarked($request->user());
+
+        return $video;
+    }
+
+    /**
      * Upload a video to the platform
      */
-    public function create(Request $request)
-    {
+    public function create(Request $request) {
         $rules = [
             'video' => 'mimes:mpeg,ogg,mp4,webm,3gp,mov,flv,avi,wmv,ts|required',
             'description' => 'required',

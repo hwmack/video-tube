@@ -48,9 +48,8 @@ Route::delete('/follow/{id}', 'UserController@unFollowUser')->name('unFollowUser
 Route::post('/video', 'VideoController@create')->name('createVideo');
 Route::put('/video/{id}', 'VideoController@update')->name('updateVideo');
 Route::delete('/video/{id}', 'VideoController@delete')->name('deleteVideo');
-//    Route::get('/video/info/{id}')->name('videoDetails');
-//    Route::get('/video/{id}')->name('downloadVideo');
-//
+Route::get('/video/{id}', 'VideoController@get')->name('videoDetails');
+
 //    Route::post('/bookmark/{video_id}')->name('addBookmark');
 //    Route::delete('/bookmark/{video_id}')->name('rmBookmark');
 
@@ -62,6 +61,7 @@ Route::delete('/video/{id}', 'VideoController@delete')->name('deleteVideo');
 
 //    Route::post('/like/{object_id}', 'LikeController@like')->name('createLike');
 //    Route::delete('/like/{object_id}', 'LikeController@dislike')->name('createLike');
+
 
 Route::get('/search/{query}', 'HomeController@search')->name('searchVideos');
 Route::get('/recommendations', 'HomeController@videos')->name('getRecommendations');

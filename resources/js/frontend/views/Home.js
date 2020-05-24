@@ -75,7 +75,6 @@ export default class Home extends React.Component {
         if (this.state.searchQuery === '') {
             getRecommendationsRequest(this.state.page)(callback)
         } else {
-            console.log('search query')
             getSearchVideosRequest(this.state.searchQuery, this.state.page)(callback)
         }
     }

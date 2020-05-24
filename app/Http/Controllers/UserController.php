@@ -37,15 +37,11 @@ class UserController extends Controller
             ])->setStatusCode(400);
         }
 
-        // Pull the videos and bookmarks for the user
-        $user->videos;
-        $user->bookmarks;
-
         $followed = $user->followers
             ->contains('follower', $request->user()->id);
 
         return response()->json([
-            'user' => $user,
+            'user' => UserController::getUserResponse($user),
             'followed' => $followed,
             'followCount' => $user->followCount(),
         ]);
@@ -89,8 +85,11 @@ class UserController extends Controller
          User::where('id', $id)
             ->update($update);
 
+         $user = User::find($id);
+
         return response()->json([
-            'user' => User::where('id', $id)->first()
+            'user' => UserController::getUserResponse($user),
+            'followCount' => $user->followCount(),
         ]);
     }
 
@@ -124,5 +123,11 @@ class UserController extends Controller
         return response()->json([
             'message' => 'success',
         ]);
+    }
+
+    public static function getUserResponse($user) {
+        $user->videos;
+        $user->bookmarkedVideos();
+        return $user;
     }
 }

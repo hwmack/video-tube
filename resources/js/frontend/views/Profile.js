@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Row, Col, Button } from "react-bootstrap"
+import VideoTile from '../components/VideoTile'
 
 import { store } from '../models/Store'
 import { apiRequest } from "../helpers/utils";
@@ -264,6 +265,28 @@ export default class Profile extends React.Component {
         )
     }
 
+    displayVideos(videos, errorMsg) {
+        if (videos.length === 0) {
+            return (
+                <b>
+                    {errorMsg}
+                </b>
+            )
+        }
+
+        return videos.map((video, i) => {
+            return (
+                <Row key={i}>
+                    <VideoTile key={i}
+                               id={video.id}
+                               title={video.title}
+                               time={video.created_at}
+                               thumbnail={video.thumbnail}/>
+                </Row>
+            )
+        })
+    }
+
     // Display the profile once its loaded
     showProfile() {
         return (
@@ -284,11 +307,15 @@ export default class Profile extends React.Component {
                 <Row>
                     <Col>
                         <h3>Bookmarked Videos</h3>
-                        Display liked videos here
+                        <div className='px-3' style={{ maxHeight: '500px', overflow: 'scroll' }}>
+                            {this.displayVideos(this.state.user.bookmarkedVideos, 'The user has no bookmarks')}
+                        </div>
                     </Col>
                     <Col>
                         <h3>User's Uploaded Videos</h3>
-                        Display the users uploaded videos
+                        <div className='px-3' style={{ maxHeight: '500px', overflow: 'scroll' }}>
+                            {this.displayVideos(this.state.user.videos, 'The user has uploaded no videos')}
+                        </div>
                     </Col>
                 </Row>
             </>
@@ -297,10 +324,6 @@ export default class Profile extends React.Component {
 
     // Main render method for component
     render() {
-        return (
-            <>
-                {this.state.user !== null ? this.showProfile() : 'Loading..'}
-            </>
-        )
+        return this.state.user !== null ? this.showProfile() : (<b>No found user</b>)
     }
 }
