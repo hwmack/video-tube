@@ -88318,13 +88318,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-
 
 
 
 function goTo(url) {
-  return function (event) {
+  return function (_) {
     return store.getState().history.push(url);
   };
 }
@@ -88337,6 +88335,7 @@ function VideoTile(props) {
     });
   }
 
+  var thumbnail = props.thumbnail === undefined ? 'https://via.placeholder.com/300x200' : "/storage/thumbnails/".concat(props.thumbnail);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     bg: "dark",
     border: "dark",
@@ -88344,7 +88343,7 @@ function VideoTile(props) {
     onClick: goTo("/video/".concat(props.id))
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"].Img, {
     variant: "top",
-    src: "https://via.placeholder.com/300x200",
+    src: thumbnail,
     height: "150px"
   }), props.title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("small", {
     className: "text-white-50"
@@ -89246,7 +89245,8 @@ var Home = /*#__PURE__*/function (_React$Component) {
               key: j,
               id: video.id,
               title: video.title,
-              time: video.created_at
+              time: video.created_at,
+              thumbnail: video.thumbnail
             }));
           }
         }

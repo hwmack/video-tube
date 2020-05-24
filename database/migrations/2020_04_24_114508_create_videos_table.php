@@ -21,8 +21,10 @@ class CreateVideosTable extends Migration
             $table->bigInteger('watch_count')
                 ->default(0);
             $table->string('location', 200);
-            $table->string('preview_location', 200)
+            $table->string('thumbnail', 200)
                 ->nullable(true); // TODO Change this so it's not nullable after finished implementing
+            $table->integer('duration')
+                ->nullable(true);
             $table->timestamps();
         });
     }

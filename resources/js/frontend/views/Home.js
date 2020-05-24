@@ -98,7 +98,8 @@ export default class Home extends React.Component {
                     row.push(<VideoTile key={j}
                                         id={video.id}
                                         title={video.title}
-                                        time={video.created_at}/>)
+                                        time={video.created_at}
+                                        thumbnail={video.thumbnail}/>)
                 }
             }
 

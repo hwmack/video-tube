@@ -20,7 +20,7 @@ class VideoController extends Controller
     public function create(Request $request)
     {
         $rules = [
-            'video' => 'mimes:mpeg,ogg,mp4,webm,3gp,mov,flv,avi,wmv,ts|max:100040|required',
+            'video' => 'mimes:mpeg,ogg,mp4,webm,3gp,mov,flv,avi,wmv,ts|required',
             'description' => 'required',
             'title' => 'required',
             'tags' => 'nullable'
@@ -36,9 +36,8 @@ class VideoController extends Controller
         $video->title = $request->input('title');
         $video->description = $request->input('description');
 
-        // Store the video on a public disk
-        $video->location = $request->file('video')
-            ->store('videos', $options = [ 'disk' => 'public' ]);
+        // Set fields related to the video (and process the video)
+        $video->setVideo($request->file('video'));
 
         $video->save();
 
