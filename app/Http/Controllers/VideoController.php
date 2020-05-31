@@ -36,7 +36,10 @@ class VideoController extends Controller
         // Get these details from the model
         $video->tags;
         $video->user;
-        $video->comments;
+
+        foreach ($video->comments as $comment) {
+            $comment->user;
+        }
 
         $video->hasBeenBookmarked($request->user());
 

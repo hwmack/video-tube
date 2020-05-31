@@ -115,3 +115,17 @@ GET http://localhost:8000/verified
 GET http://localhost:8000/api/recommendations
 Accept: application/json
 Content-Type: application/json
+
+###
+
+GET http://localhost:8000/api/comment/1
+
+###
+
+POST http://localhost:8000/api/comment/1
+Accept: application/json
+Content-Type: application/json
+
+{
+    "content": "Here is some comment content"
+}

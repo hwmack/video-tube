@@ -5,6 +5,7 @@
  * A callback can be passed into the method it returns which happens when a request was successful
  */
 
+import { useCallback } from 'react'
 import { apiRequest } from '../helpers/utils'
 
 /**
@@ -90,4 +91,10 @@ export function getBookmarkRequest(id, add = true) {
     const method = add ? 'POST' : 'DELETE'
     return callback =>
         apiRequest(`/bookmark/${id}`, method, null, callback)
+}
+
+export function getCommentRequest(id, content) {
+    const body = { content }
+    return callback =>
+        apiRequest(`/comment/${id}`, 'POST', body, callback)
 }

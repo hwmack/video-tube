@@ -22,6 +22,43 @@ class RegisterController extends Controller {
         $this->middleware('auth')->only('resendEmail');
     }
 
+    /**
+     * Register the user but first check the results of the recaptcha token
+     */
+    protected function registerWithToken(Request $request) {
+        if (!$request->has('captcha_token')) {
+            return response()->json([
+                'captcha' => 'Missing captcha token'
+            ])->setStatusCode(422);
+        }
+
+        $data = [
+            'secret' => env('CAPTCHA_SECRET'),
+            'response' => $request->input('captcha_token')
+        ];
+
+        $curl = curl_init("https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = json_decode(curl_exec($curl), true);
+        curl_close($curl);
+
+        if (isset($response['error-codes'])) {
+            return response()->json([
+                'errors' => $response['error-codes']
+            ])->setStatusCode(422);
+        }
+
+        if (!isset($response['success']) || !$response['success']) {
+            return response()->json([
+                'captcha' => 'Failed Captcha'
+            ])->setStatusCode(422);
+        }
+
+        return $this->register($request);
+    }
+
     protected function registered(Request $request, $user) {
         // Send verification email to user
         $this->sendVerificationEmail($user);

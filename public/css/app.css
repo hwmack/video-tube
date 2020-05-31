@@ -10923,3 +10923,14 @@ a.text-dark:focus {
   text-decoration: none;
 }
 
+#comments-section {
+  position: absolute;
+  max-height: 100%;
+  width: 100%;
+  overflow: scroll;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
+}
+

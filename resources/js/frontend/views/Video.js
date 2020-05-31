@@ -1,8 +1,9 @@
 import React from 'react'
-import { Row, Col, Badge, OverlayTrigger, Tooltip, Form, Button, Spinner } from 'react-bootstrap'
+import { Row, Col, Badge, OverlayTrigger, Tooltip, Form, Button, Spinner, InputGroup, Card } from 'react-bootstrap'
+import { GiPayMoney } from "react-icons/gi"
 import { GoPlus, GoCheck } from 'react-icons/go'
 import { Link } from 'react-router-dom'
-import { getBookmarkRequest, getVideoRequest } from '../models/Requests'
+import { getBookmarkRequest, getVideoRequest, getCommentRequest } from '../models/Requests'
 
 export default class Video extends React.Component {
     constructor(props) {
@@ -54,6 +55,9 @@ export default class Video extends React.Component {
                 owner: body.user,
                 comments: body.comments,
                 tags: body.tags,
+            }, () => {
+                // Scroll to the bottom of the comments
+                this.scrollToBottom()
             })
         })
     }
@@ -82,6 +86,56 @@ export default class Video extends React.Component {
                 </Badge>
             )
         })
+    }
+
+    displayComments(comments) {
+        return comments.map((comment, id) => {
+            return (
+                <Card key={id}
+                      bg='dark'
+                      border='primary'
+                      className='m-2 p-2 w-100'
+                      style={{ height: 'auto' }}>
+                    <Card.Text>
+                        {comment.content}
+                        <br/>
+                        <small>
+                            Created {comment.created_at} by
+                            <Link to={`/profile/${comment.user.username}`}>
+                                {' ' + comment.user.username}
+                            </Link>
+                        </small>
+                    </Card.Text>
+                </Card>
+            )
+        })
+    }
+
+    sendCreateCommentRequest(event) {
+        event.preventDefault()
+
+        const comment = document.getElementById('comment-input');
+        getCommentRequest(this.state.video_id, comment.value)((request, body) => {
+            if (request.status === 200) {
+                const newComments = this.state.comments
+                newComments.push(body.comment)
+
+                this.setState({
+                    ...this.state,
+                    comments: this.state.comments
+                }, () => {
+                    comment.value = ""
+                    this.scrollToBottom()
+                })
+            } else {
+                alert("Problem saving comment")
+            }
+        })
+    }
+
+    scrollToBottom() {
+        const section = document.getElementById('comments-section')
+        section.scrollTop = section.scrollHeight
     }
 
     sendBookmarkRequest() {
@@ -124,19 +178,40 @@ export default class Video extends React.Component {
             <>
                 <Row className='m-0'>
                     <Col md={9} className='embed-responsive embed-responsive-16by9'>
-                        <video className='embed-responsive-item' controls preload='auto' poster={this.state.thumbnail_url}>
+                        <video className='embed-responsive-item' controls
+                               preload='auto' poster={this.state.thumbnail_url}>
                             <source src={this.state.video_url} type='video/mp4' />
                         </video>
                     </Col>
                     <Col md={3}>
-                        <Row className='p-2'>
-                            Comments will go here
+                        <Row id='comments-section'
+                             className='p-2'>
+                            {this.displayComments(this.state.comments)}
+                            <div style={{ height: '50px', width: '100%' }}>
+                                { /* Hidden div to add some spacing from the bottom of the scrolling window */ }
+                            </div>
                         </Row>
                         <Row>
-                            <Form className='w-100' style={{position: 'absolute', bottom: '1px'}}>
-                                <Form.Control
-                                    type='text'
-                                    placeholder='Write a comment...'/>
+                            <Form className='w-100'
+                                  style={{position: 'absolute', bottom: '1px'}}
+                                  onSubmit={this.sendCreateCommentRequest.bind(this)}>
+                                <InputGroup>
+                                    <Form.Control
+                                        id='comment-input'
+                                        type='text'
+                                        placeholder='Write a comment...'/>
+                                    <InputGroup.Append>
+                                        <OverlayTrigger placement='bottom' overlay={(
+                                            <Tooltip id='tooltip'>
+                                                Tip User
+                                            </Tooltip>
+                                        )}>
+                                            <Button onClick={() => alert("To tip this user for this video")}>
+                                                <GiPayMoney/>
+                                            </Button>
+                                        </OverlayTrigger>
+                                    </InputGroup.Append>
+                                </InputGroup>
                             </Form>
                         </Row>
                     </Col>

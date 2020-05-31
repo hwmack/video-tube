@@ -23,12 +23,14 @@ export default class Home extends React.Component {
         /* Fetch some initial videos to display */
         this.fetchVideos()
 
-        window.addEventListener('scroll', this.handleScrollEvent.bind(this))
+        this.scrollListener = this.handleScrollEvent.bind(this)
+
+        window.addEventListener('scroll', this.scrollListener)
     }
 
     componentWillUnmount() {
         // Unregister the scroll event
-        window.removeEventListener('scroll', this.handleScrollEvent.bind(this))
+        window.removeEventListener('scroll', this.scrollListener)
     }
 
     handleScrollEvent() {

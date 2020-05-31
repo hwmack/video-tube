@@ -37,7 +37,7 @@ class HomeController extends Controller
             ->select('*', 'videos.id as id')
 
             // Check if the title, description, tag name or username matches
-            ->where('title', 'ILIKE', "%$query%")
+            ->where('title', 'ILIKE', "$query")
             ->orWhere('description', 'ILIKE', "%$query%")
             ->orWhere('name', 'ILIKE', "%$query%")
             ->orWhere('username', 'ILIKE', "%$query%")

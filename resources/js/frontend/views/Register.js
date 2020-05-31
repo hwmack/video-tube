@@ -54,7 +54,7 @@ export default class Register extends React.Component {
         }
     }
 
-    handleRegister(event) {
+    submitForm(event) {
         event.preventDefault()
 
         // Perform basic client side validation
@@ -82,14 +82,23 @@ export default class Register extends React.Component {
             return false
         }
 
+        // Get a token to send to the server
+        const that = this;
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LfjXv4UAAAAACRDnaNrW3-wlnN_f5liZwFB1ZhR',
+                {action: 'submit'}).then(function(token) {
+                    that.handleRegister(token)
+            })
+        })
+    }
 
-        // If we have all the required fields, we will send it to the server and see what it says
-
+    handleRegister(token) {
         let body = {
             email: this.state.email,
             username: this.state.username,
             password: this.state.password,
-            password_confirmation: this.state.confirm
+            password_confirmation: this.state.confirm,
+            captcha_token: token
         }
 
         apiRequest('/register', 'POST', body, (response, body) => {
@@ -108,7 +117,9 @@ export default class Register extends React.Component {
 
                 let errors = body.errors;
 
-                if (errors.email) {
+                if (body.captcha !== undefined) {
+                    newState.form.serverError = body.captcha
+                } else if (errors.email) {
                     newState.form.serverError = errors.email[0]
                 } else if (errors.username) {
                     newState.form.serverError = errors.username[0]
@@ -149,7 +160,7 @@ export default class Register extends React.Component {
                 </Row>
                 <Row className='justify-content-xl-center'>
                     <Col lg={4}>
-                        <Form onSubmit={this.handleRegister.bind(this)}
+                        <Form onSubmit={this.submitForm.bind(this)}
                               noValidate
                               validated={this.state.form.validated}>
 
@@ -220,6 +231,14 @@ export default class Register extends React.Component {
                                     <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
                                 </InputGroup>
                             </Form.Group>
+
+                            <p>
+                                <small>
+                                    This site is protected by reCAPTCHA and the Google{' '}
+                                    <a href="https://policies.google.com/privacy">Privacy Policy</a> and{' '}
+                                    <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+                                </small>
+                            </p>
 
                             <Button variant='primary' type='submit'>
                                 Register

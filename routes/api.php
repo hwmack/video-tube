@@ -21,7 +21,7 @@ use \Illuminate\Support\Facades\Auth;
 Route::namespace('Auth')->group(function() {
     Route::post('/login', 'LoginController@login')->name('login');
     Route::get('/logout', 'LoginController@logout')->name('logout');
-    Route::post('/register', 'RegisterController@register')->name('register');
+    Route::post('/register', 'RegisterController@registerWithToken')->name('register');
     Route::post('/email/resend', 'RegisterController@resendEmail')->name('resendVerification');
 
     // Routes dealing with resetting a forgotten password
@@ -53,12 +53,10 @@ Route::get('/video/{id}', 'VideoController@get')->name('videoDetails');
 Route::post('/bookmark/{id}', 'BookmarkController@addBookmark')->name('addBookmark');
 Route::delete('/bookmark/{id}', 'BookmarkController@removeBookmark')->name('rmBookmark');
 
-/*
- * TODO This will probably be moved to websockets later
- */
-//    Route::get('/comments/{video_id}')->name('getComments');
-//    Route::post('/comments/{video_id}')->name('createComment');
+Route::get('/comment/{id}', 'CommentController@get')->name('getComments');
+Route::post('/comment/{id}', 'CommentController@create')->name('createComment');
 
+// TODO: May not have time to finish likes
 //    Route::post('/like/{object_id}', 'LikeController@like')->name('createLike');
 //    Route::delete('/like/{object_id}', 'LikeController@dislike')->name('createLike');
 

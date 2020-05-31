@@ -6,6 +6,8 @@
 
         <link rel="stylesheet" href="/css/app.css" />
 
+        <script src="https://www.google.com/recaptcha/api.js?render=6LfjXv4UAAAAACRDnaNrW3-wlnN_f5liZwFB1ZhR"></script>
+
         <title>VideoTube</title>
     </head>
     <body>
