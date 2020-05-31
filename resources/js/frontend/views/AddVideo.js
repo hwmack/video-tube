@@ -224,9 +224,9 @@ export default class AddVideo extends React.Component {
 
     renderDrag() {
         return (
-            <p>
-                Drag here
-            </p>
+            <div className='w-100 p-3 text-center border rounded'>
+                <h4 className='m-0'>Drag your video here</h4>
+            </div>
         )
     }
 
