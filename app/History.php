@@ -15,10 +15,10 @@ class History extends Model
     ];
 
     protected function user() {
-        return $this->hasOne('App\User');
+        return $this->belongsTo('App\User');
     }
 
     protected function video() {
-        return $this->hasOne('App\Video');
+        return $this->belongsTo('App\Video');
     }
 }

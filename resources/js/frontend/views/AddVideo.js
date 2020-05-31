@@ -19,7 +19,69 @@ export default class AddVideo extends React.Component {
             // TODO Add a loading bar if I get time
             error: '',
             uploading: false,
+            dragging: false,
         }
+    }
+
+    componentDidMount() {
+        this.dropZone = document.getElementById('drag-target')
+        this.dropZoneDrag = this.handleDrag.bind(this)
+        this.dropZoneDrop = this.handleDrop.bind(this)
+        this.dropZoneClear = this.clearDrag.bind(this)
+
+        document.addEventListener('dragover', this.dropZoneDrag)
+        this.dropZone.addEventListener('drop', this.dropZoneDrop)
+        document.addEventListener('dragexit', this.dropZoneClear)
+        document.addEventListener('drop', this.dropZoneClear)
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('dragover', this.dropZoneDrag)
+        this.dropZone.removeEventListener('drop', this.dropZoneDrop)
+        document.removeEventListener('dragexit', this.dropZoneClear)
+        document.removeEventListener('drop', this.dropZoneClear)
+    }
+
+    clearDrag(event) {
+        event.preventDefault()
+
+        this.setState({
+            ...this.state,
+            dragging: false,
+        })
+    }
+
+    /**
+     * Handle a user dragging a file onto the form
+     */
+    handleDrag(event) {
+        event.preventDefault()
+
+        this.setState({
+            ...this.state,
+            dragging: true,
+        })
+    }
+
+    /**
+     * Handle when the user drops the file
+     */
+    handleDrop(event) {
+        event.preventDefault()
+
+        // Check its a file type
+        if (!event.dataTransfer.types[0].includes('file')) {
+            return;
+        }
+
+        const file = event.dataTransfer.files.length === 0 ? null : event.dataTransfer.files[0]
+        const fileValue = file === null ? 'Video' : file.name
+        this.setState({
+            ...this.state,
+            file,
+            fileValue,
+            dragging: false,
+        })
     }
 
     hide() {
@@ -113,53 +175,69 @@ export default class AddVideo extends React.Component {
         }
     }
 
+    formContent() {
+        return (
+            <>
+                <Alert variant='danger' className={this.state.error === '' ? 'd-none' : 'd-block'}>
+                    {this.state.error}
+                </Alert>
+                <Alert variant='success' className={this.state.uploading === false ? 'd-none' : 'd-block'}>
+                    Uploading..
+                </Alert>
+                <Form.Group as={Row} controlId="formTitle">
+                    <Col>
+                        <Form.Control type="text" placeholder="Title" onChange={this.handleFormInput.bind(this)}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId='formDescription'>
+                    <Col>
+                        <Form.Control as='textarea'
+                                      rows='3'
+                                      placeholder='Description'
+                                      onChange={this.handleFormInput.bind(this)}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId='formTags'>
+                    <Col>
+                        <Form.Control
+                            placeholder='Tags (separated by ",")'
+                            onChange={this.handleFormInput.bind(this)}/>
+                    </Col>
+                </Form.Group>
+
+                <Form.Group as={Row} controlId='formVideo'>
+                    <Col>
+                        <Form.File custom>
+                            <Form.File.Input onChange={this.handleFormInput.bind(this)}/>
+                            <Form.File.Label data-browse="Select">
+                                {this.state.fileValue}
+                            </Form.File.Label>
+                            <Form.Control.Feedback type="valid">You did it!</Form.Control.Feedback>
+                        </Form.File>
+                    </Col>
+                </Form.Group>
+            </>
+        )
+    }
+
+    renderDrag() {
+        return (
+            <p>
+                Drag here
+            </p>
+        )
+    }
+
     render() {
         return (
             <Modal show={true} onHide={this.hide.bind(this)}>
                 <Modal.Header>
                     <Modal.Title>Upload Video</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <Alert variant='danger' className={this.state.error === '' ? 'd-none' : 'd-block'}>
-                        {this.state.error}
-                    </Alert>
-                    <Alert variant='success' className={this.state.uploading === false ? 'd-none' : 'd-block'}>
-                        Uploading..
-                    </Alert>
-                    <Form.Group as={Row} controlId="formTitle">
-                        <Col>
-                            <Form.Control type="text" placeholder="Title" onChange={this.handleFormInput.bind(this)}/>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group as={Row} controlId='formDescription'>
-                        <Col>
-                            <Form.Control as='textarea'
-                                          rows='3'
-                                          placeholder='Description'
-                                          onChange={this.handleFormInput.bind(this)}/>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group as={Row} controlId='formTags'>
-                        <Col>
-                            <Form.Control
-                                placeholder='Tags (separated by ",")'
-                                onChange={this.handleFormInput.bind(this)}/>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group as={Row} controlId='formVideo'>
-                        <Col>
-                            <Form.File custom>
-                                <Form.File.Input onChange={this.handleFormInput.bind(this)}/>
-                                <Form.File.Label data-browse="Select">
-                                    {this.state.fileValue}
-                                </Form.File.Label>
-                                <Form.Control.Feedback type="valid">You did it!</Form.Control.Feedback>
-                            </Form.File>
-                        </Col>
-                    </Form.Group>
+                <Modal.Body id='drag-target'>
+                    {this.state.dragging ? this.renderDrag() : this.formContent()}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.hide.bind(this)}>

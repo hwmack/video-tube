@@ -57,7 +57,7 @@ function resendVerificationEmail() {
 function displayNotifications(_) {
     if (store.getState().isUserAuthenticated['email_verified_at'] == null) {
         return (
-            <Row className='d-flex justify-content-center'>
+            <Row className='d-flex justify-content-center w-100 position-fixed' style={{ zIndex: 20 }}>
                 <Alert variant='warning'>
                     Please verify your email.
                     If you haven't received it, click{' '}

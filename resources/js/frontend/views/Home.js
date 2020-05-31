@@ -23,6 +23,8 @@ export default class Home extends React.Component {
         /* Fetch some initial videos to display */
         this.fetchVideos()
 
+        // Set this variable to give the method a static signature
+        // Which allows to remove the event listener when unmounting the component
         this.scrollListener = this.handleScrollEvent.bind(this)
 
         window.addEventListener('scroll', this.scrollListener)

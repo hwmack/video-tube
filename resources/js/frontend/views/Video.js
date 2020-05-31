@@ -88,8 +88,50 @@ export default class Video extends React.Component {
         })
     }
 
+    setVideoTime(seconds) {
+        document.getElementById('video-view').currentTime = seconds
+    }
+
     displayComments(comments) {
         return comments.map((comment, id) => {
+            // Check if the content contains any values like a name or timestamp
+
+            const timestampOrUserRe = /(@\S+|~\d+:\d+)/
+            const timestampRe = /~(\d+:\d+)/
+            const userRe = /@(\S+)/
+            console.log(comment.content.split(timestampOrUserRe))
+            let newContent = comment.content.split(timestampOrUserRe).map((item, idx) => {
+
+                // Check if it matches a timestamp
+                const timestamp = timestampRe.exec(item)
+                if (timestamp !== null) {
+                    const times = timestamp[1].split(':')
+                    const minutes = Number(times[0]) * 60
+                    const seconds = Number(times[1])
+
+                    return (
+                        <Link key={idx} to='#' onClick={() => this.setVideoTime(minutes + seconds)}>
+                            {item}
+                        </Link>
+                    )
+                }
+
+                // Check if it matches a user
+                const user = userRe.exec(item)
+                if (user !== null) {
+                    const user = userRe.exec(item)
+
+                    return (
+                        <Link key={idx} to={`/profile/${user[1]}`}>
+                            {item}
+                        </Link>
+                    )
+                }
+
+                // Or just return the standard text
+                return item
+            })
+
             return (
                 <Card key={id}
                       bg='dark'
@@ -97,7 +139,7 @@ export default class Video extends React.Component {
                       className='m-2 p-2 w-100'
                       style={{ height: 'auto' }}>
                     <Card.Text>
-                        {comment.content}
+                        {newContent}
                         <br/>
                         <small>
                             Created {comment.created_at} by
@@ -178,7 +220,7 @@ export default class Video extends React.Component {
             <>
                 <Row className='m-0'>
                     <Col md={9} className='embed-responsive embed-responsive-16by9'>
-                        <video className='embed-responsive-item' controls
+                        <video id='video-view' className='embed-responsive-item' controls
                                preload='auto' poster={this.state.thumbnail_url}>
                             <source src={this.state.video_url} type='video/mp4' />
                         </video>
